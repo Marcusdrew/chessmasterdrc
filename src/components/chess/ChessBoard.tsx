@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Square } from 'chess.js';
 import ChessSquare from './ChessSquare';
-import { GameMode } from '@/hooks/useChessGame';
 
 interface ChessBoardProps {
   board: ({ type: string; color: string; square: string } | null)[][];
@@ -10,12 +9,12 @@ interface ChessBoardProps {
   validMoves: string[];
   isInCheck: boolean;
   currentTurn: string;
-  mode: GameMode;
+  playerColor: 'w' | 'b';
   onSquareClick: (square: Square) => void;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
-  board, selectedSquare, validMoves, isInCheck, currentTurn, mode, onSquareClick,
+  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, onSquareClick,
 }) => {
   const findKingSquare = (): string | null => {
     for (let r = 0; r < 8; r++) {
@@ -31,32 +30,33 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   const kingSquare = isInCheck ? findKingSquare() : null;
 
+  // Flip board if playing as black
+  const displayBoard = playerColor === 'b'
+    ? [...board].reverse().map(row => [...row].reverse())
+    : board;
+
   return (
     <motion.div
-      className="relative cyber-border rounded-lg overflow-hidden glow-cyan"
-      initial={{ opacity: 0, scale: 0.9 }}
+      className="relative rounded-lg overflow-hidden chess-board-shadow border border-border"
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, type: 'spring' }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Scan line effect */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent animate-scan-line" />
-      </div>
-
       <div className="grid grid-cols-8 w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]">
-        {board.map((row, rowIdx) =>
+        {displayBoard.map((row, rowIdx) =>
           row.map((piece, colIdx) => {
-            const square = `${'abcdefgh'[colIdx]}${8 - rowIdx}` as Square;
+            const actualRow = playerColor === 'b' ? 7 - rowIdx : rowIdx;
+            const actualCol = playerColor === 'b' ? 7 - colIdx : colIdx;
+            const square = `${'abcdefgh'[actualCol]}${8 - actualRow}` as Square;
             return (
               <ChessSquare
                 key={square}
-                row={rowIdx}
-                col={colIdx}
+                row={actualRow}
+                col={actualCol}
                 piece={piece}
                 isSelected={selectedSquare === square}
                 isValidMove={validMoves.includes(square)}
                 isCheck={kingSquare === square}
-                isRevolutionary={mode === 'revolutionary'}
                 onClick={onSquareClick}
               />
             );
