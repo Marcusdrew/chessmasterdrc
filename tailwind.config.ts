@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Orbitron", "sans-serif"],
-        body: ["Space Grotesk", "sans-serif"],
+        display: ["Playfair Display", "serif"],
+        body: ["Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,16 +51,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: {
-          cyan: "hsl(var(--neon-cyan))",
-          magenta: "hsl(var(--neon-magenta))",
-          gold: "hsl(var(--neon-gold))",
-          green: "hsl(var(--neon-green))",
-        },
-        cyber: {
-          dark: "hsl(var(--cyber-dark))",
-          surface: "hsl(var(--cyber-surface))",
-          elevated: "hsl(var(--cyber-elevated))",
+        chess: {
+          light: "hsl(var(--chess-light))",
+          dark: "hsl(var(--chess-dark))",
+          selected: "hsl(var(--chess-selected))",
+          valid: "hsl(var(--chess-valid))",
+          check: "hsl(var(--chess-check))",
+          "white-piece": "hsl(var(--chess-white-piece))",
+          "black-piece": "hsl(var(--chess-black-piece))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -87,20 +85,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "pulse-glow": {
-          "0%, 100%": { opacity: "0.4" },
-          "50%": { opacity: "1" },
-        },
-        "scan-line": {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(100%)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "scan-line": "scan-line 3s linear infinite",
       },
     },
   },

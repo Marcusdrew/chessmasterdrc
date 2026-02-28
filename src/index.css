@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,60 +6,80 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 190 100% 95%;
+    --background: 30 15% 96%;
+    --foreground: 20 10% 12%;
 
-    --card: 220 25% 7%;
-    --card-foreground: 190 100% 95%;
+    --card: 30 20% 98%;
+    --card-foreground: 20 10% 12%;
 
-    --popover: 220 25% 7%;
-    --popover-foreground: 190 100% 95%;
+    --popover: 30 20% 98%;
+    --popover-foreground: 20 10% 12%;
 
-    --primary: 185 100% 50%;
-    --primary-foreground: 220 20% 4%;
+    --primary: 25 30% 28%;
+    --primary-foreground: 30 15% 96%;
 
-    --secondary: 300 100% 45%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 35 25% 88%;
+    --secondary-foreground: 20 10% 12%;
 
-    --muted: 220 20% 12%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 30 15% 92%;
+    --muted-foreground: 20 8% 50%;
 
-    --accent: 45 100% 55%;
-    --accent-foreground: 220 20% 4%;
+    --accent: 38 70% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 85% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 185 60% 18%;
-    --input: 220 20% 14%;
-    --ring: 185 100% 50%;
+    --border: 30 15% 85%;
+    --input: 30 15% 90%;
+    --ring: 25 30% 28%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 220 25% 6%;
-    --sidebar-foreground: 190 100% 95%;
-    --sidebar-primary: 185 100% 50%;
-    --sidebar-primary-foreground: 220 20% 4%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 190 100% 95%;
-    --sidebar-border: 185 60% 18%;
-    --sidebar-ring: 185 100% 50%;
+    --sidebar-background: 30 20% 98%;
+    --sidebar-foreground: 20 10% 12%;
+    --sidebar-primary: 25 30% 28%;
+    --sidebar-primary-foreground: 30 15% 96%;
+    --sidebar-accent: 30 15% 92%;
+    --sidebar-accent-foreground: 20 10% 12%;
+    --sidebar-border: 30 15% 85%;
+    --sidebar-ring: 25 30% 28%;
 
-    /* Custom cyber tokens */
-    --neon-cyan: 185 100% 50%;
-    --neon-magenta: 300 100% 45%;
-    --neon-gold: 45 100% 55%;
-    --neon-green: 150 100% 45%;
-    --cyber-dark: 220 20% 4%;
-    --cyber-surface: 220 25% 7%;
-    --cyber-elevated: 220 20% 12%;
+    /* Chess-specific tokens */
+    --chess-light: 37 35% 82%;
+    --chess-dark: 25 25% 45%;
+    --chess-selected: 45 80% 60%;
+    --chess-valid: 145 50% 45%;
+    --chess-check: 0 72% 51%;
+    --chess-white-piece: 30 10% 15%;
+    --chess-black-piece: 20 10% 12%;
 
-    --glow-cyan: 0 0 20px hsl(185 100% 50% / 0.4), 0 0 40px hsl(185 100% 50% / 0.2);
-    --glow-magenta: 0 0 20px hsl(300 100% 45% / 0.4), 0 0 40px hsl(300 100% 45% / 0.2);
-    --glow-gold: 0 0 20px hsl(45 100% 55% / 0.4), 0 0 40px hsl(45 100% 55% / 0.2);
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+  }
 
-    --font-display: 'Orbitron', sans-serif;
-    --font-body: 'Space Grotesk', sans-serif;
+  .dark {
+    --background: 20 12% 10%;
+    --foreground: 30 15% 92%;
+    --card: 20 12% 13%;
+    --card-foreground: 30 15% 92%;
+    --popover: 20 12% 13%;
+    --popover-foreground: 30 15% 92%;
+    --primary: 38 70% 50%;
+    --primary-foreground: 20 12% 10%;
+    --secondary: 20 12% 18%;
+    --secondary-foreground: 30 15% 92%;
+    --muted: 20 12% 18%;
+    --muted-foreground: 30 10% 55%;
+    --accent: 38 70% 50%;
+    --accent-foreground: 20 12% 10%;
+    --border: 20 12% 22%;
+    --input: 20 12% 18%;
+    --ring: 38 70% 50%;
+    --chess-light: 37 25% 72%;
+    --chess-dark: 25 20% 38%;
+    --chess-white-piece: 30 15% 92%;
+    --chess-black-piece: 20 10% 20%;
   }
 }
 
@@ -78,39 +98,8 @@
   }
 }
 
-/* Glow utilities */
 @layer utilities {
-  .glow-cyan {
-    box-shadow: var(--glow-cyan);
-  }
-  .glow-magenta {
-    box-shadow: var(--glow-magenta);
-  }
-  .glow-gold {
-    box-shadow: var(--glow-gold);
-  }
-  .text-glow-cyan {
-    text-shadow: 0 0 10px hsl(185 100% 50% / 0.6), 0 0 30px hsl(185 100% 50% / 0.3);
-  }
-  .text-glow-magenta {
-    text-shadow: 0 0 10px hsl(300 100% 45% / 0.6), 0 0 30px hsl(300 100% 45% / 0.3);
-  }
-  .text-glow-gold {
-    text-shadow: 0 0 10px hsl(45 100% 55% / 0.6), 0 0 30px hsl(45 100% 55% / 0.3);
-  }
-  .cyber-grid {
-    background-image: 
-      linear-gradient(hsl(185 100% 50% / 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(185 100% 50% / 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-  .cyber-border {
-    border: 1px solid hsl(185 100% 50% / 0.2);
-  }
-  .energy-bar {
-    background: linear-gradient(90deg, hsl(185 100% 50%), hsl(150 100% 45%));
-  }
-  .power-bar {
-    background: linear-gradient(90deg, hsl(300 100% 45%), hsl(45 100% 55%));
+  .chess-board-shadow {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 }
