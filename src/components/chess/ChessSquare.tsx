@@ -69,17 +69,6 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
         </motion.span>
       )}
 
-      {/* Coordinate labels */}
-      {col === 0 && (
-        <span className={`absolute top-0.5 left-1 text-[10px] font-body ${isLight ? 'text-chess-dark/40' : 'text-chess-light/40'}`}>
-          {8 - row}
-        </span>
-      )}
-      {row === 7 && (
-        <span className={`absolute bottom-0.5 right-1 text-[10px] font-body ${isLight ? 'text-chess-dark/40' : 'text-chess-light/40'}`}>
-          {'abcdefgh'[col]}
-        </span>
-      )}
     </motion.div>
   );
 };

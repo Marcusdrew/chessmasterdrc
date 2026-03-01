@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { Chess, Square, Move } from 'chess.js';
+import { getBestMove, Difficulty } from '@/lib/chessAI';
 
 export interface GameState {
   selectedSquare: Square | null;
@@ -10,7 +11,7 @@ export interface GameState {
   winner: 'w' | 'b' | null;
 }
 
-export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w') => {
+export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w', difficulty: Difficulty = 'intermediaire') => {
   const gameRef = useRef(new Chess());
   const [fen, setFen] = useState(gameRef.current.fen());
   const [state, setState] = useState<GameState>({
@@ -38,19 +39,8 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w')
     setState(prev => ({ ...prev, isAiThinking: true }));
 
     setTimeout(() => {
-      const moves = game.moves({ verbose: true });
-      if (moves.length === 0) return;
-
-      const captures = moves.filter(m => m.captured);
-      const checks = moves.filter(m => m.san.includes('+'));
-      let chosen: Move;
-      if (captures.length > 0 && Math.random() > 0.3) {
-        chosen = captures[Math.floor(Math.random() * captures.length)];
-      } else if (checks.length > 0 && Math.random() > 0.5) {
-        chosen = checks[Math.floor(Math.random() * checks.length)];
-      } else {
-        chosen = moves[Math.floor(Math.random() * moves.length)];
-      }
+      const chosen = getBestMove(game, difficulty);
+      if (!chosen) return;
 
       const result = game.move(chosen);
       if (result) {
@@ -65,7 +55,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w')
         }));
       }
     }, 400 + Math.random() * 600);
-  }, [updateGameStatus]);
+  }, [updateGameStatus, difficulty]);
 
   // If AI plays first (player is black), trigger AI on mount
   const hasInitialMove = useRef(false);
@@ -81,20 +71,35 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w')
 
     const piece = game.get(square);
 
+    // If a piece is already selected
     if (state.selectedSquare) {
-      const move = game.move({ from: state.selectedSquare, to: square, promotion: 'q' });
-      if (move) {
-        const { gameStatus, winner } = updateGameStatus();
-        setFen(game.fen());
-        setState(prev => ({
-          ...prev,
-          selectedSquare: null,
-          validMoves: [],
-          moveHistory: [...prev.moveHistory, move],
-          gameStatus,
-          winner,
-        }));
-        if (vsAi && !game.isGameOver()) makeAiMove();
+      // If clicking another own piece, switch selection
+      if (piece && piece.color === game.turn() && square !== state.selectedSquare) {
+        const moves = game.moves({ square, verbose: true });
+        setState(prev => ({ ...prev, selectedSquare: square, validMoves: moves.map(m => m.to) }));
+        return;
+      }
+
+      // Try to make the move
+      try {
+        const move = game.move({ from: state.selectedSquare, to: square, promotion: 'q' });
+        if (move) {
+          const { gameStatus, winner } = updateGameStatus();
+          setFen(game.fen());
+          setState(prev => ({
+            ...prev,
+            selectedSquare: null,
+            validMoves: [],
+            moveHistory: [...prev.moveHistory, move],
+            gameStatus,
+            winner,
+          }));
+          if (vsAi && !game.isGameOver()) makeAiMove();
+          return;
+        }
+      } catch {
+        // Invalid move, deselect
+        setState(prev => ({ ...prev, selectedSquare: null, validMoves: [] }));
         return;
       }
     }
@@ -106,6 +111,37 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w')
       setState(prev => ({ ...prev, selectedSquare: null, validMoves: [] }));
     }
   }, [state.selectedSquare, state.gameStatus, state.isAiThinking, vsAi, playerColor, makeAiMove, updateGameStatus]);
+
+  const undoMove = useCallback(() => {
+    const game = gameRef.current;
+    if (state.moveHistory.length === 0 || state.isAiThinking) return;
+
+    // Undo opponent's move + player's move (2 moves)
+    if (vsAi && state.moveHistory.length >= 2) {
+      game.undo(); // opponent
+      game.undo(); // player
+      setFen(game.fen());
+      setState(prev => ({
+        ...prev,
+        selectedSquare: null,
+        validMoves: [],
+        moveHistory: prev.moveHistory.slice(0, -2),
+        gameStatus: 'playing',
+        winner: null,
+      }));
+    } else if (!vsAi || state.moveHistory.length === 1) {
+      game.undo();
+      setFen(game.fen());
+      setState(prev => ({
+        ...prev,
+        selectedSquare: null,
+        validMoves: [],
+        moveHistory: prev.moveHistory.slice(0, -1),
+        gameStatus: 'playing',
+        winner: null,
+      }));
+    }
+  }, [state.moveHistory, state.isAiThinking, vsAi]);
 
   const resetGame = useCallback(() => {
     gameRef.current = new Chess();
@@ -131,6 +167,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w')
     state,
     handleSquareClick,
     resetGame,
+    undoMove,
     isInCheck: isInCheck(),
     currentTurn: currentTurn(),
   };
