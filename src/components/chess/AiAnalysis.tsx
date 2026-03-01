@@ -6,13 +6,16 @@ interface AiAnalysisProps {
   fen: string;
   currentTurn: string;
   gameStatus: string;
+  playerColor: 'w' | 'b';
 }
 
 interface AnalysisEntry {
   moveNumber: number;
   move: string;
-  color: 'w' | 'b';
+  from: string;
+  to: string;
   analysis: string;
+  suggestion?: string;
   type: 'good' | 'mistake' | 'tip' | 'info';
 }
 
@@ -30,31 +33,35 @@ const typeIcons: Record<string, string> = {
   info: 'ℹ',
 };
 
-const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, gameStatus }) => {
+const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, gameStatus, playerColor }) => {
   const [analyses, setAnalyses] = useState<AnalysisEntry[]>([]);
   const [thinking, setThinking] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastAnalyzedRef = useRef(0);
 
   useEffect(() => {
     if (moveHistory.length === 0) {
       setAnalyses([]);
+      lastAnalyzedRef.current = 0;
       return;
     }
 
+    // Only analyze player's moves
     const lastMove = moveHistory[moveHistory.length - 1];
-    if (!lastMove) return;
+    if (!lastMove || lastMove.color !== playerColor) return;
+    if (moveHistory.length <= lastAnalyzedRef.current) return;
 
+    lastAnalyzedRef.current = moveHistory.length;
     setThinking(true);
 
-    // Simulate AI analysis (will be replaced with real AI)
     const timer = setTimeout(() => {
-      const analysis = analyzeMove(lastMove, moveHistory, fen);
+      const analysis = analyzeMove(lastMove, moveHistory, fen, playerColor);
       setAnalyses(prev => [...prev, analysis]);
       setThinking(false);
     }, 300 + Math.random() * 500);
 
     return () => clearTimeout(timer);
-  }, [moveHistory.length]);
+  }, [moveHistory.length, playerColor]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -65,7 +72,7 @@ const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, 
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">🤖</span>
         <h3 className="text-sm font-display font-semibold text-foreground">
-          Analyse IA
+          Conseils IA
         </h3>
         {thinking && (
           <span className="text-xs text-muted-foreground animate-pulse font-body">
@@ -77,7 +84,7 @@ const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, 
       <div className="flex-1 overflow-y-auto space-y-2">
         {analyses.length === 0 && !thinking && (
           <p className="text-xs text-muted-foreground font-body py-4 text-center">
-            Jouez un coup pour recevoir des conseils de l'IA
+            Jouez un coup pour recevoir des conseils
           </p>
         )}
 
@@ -89,10 +96,15 @@ const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, 
             <div className="flex items-center gap-1.5 mb-1">
               <span>{typeIcons[entry.type]}</span>
               <span className="font-medium text-foreground">
-                {entry.color === 'w' ? 'Blancs' : 'Noirs'} — {entry.move}
+                {entry.from} → {entry.to}
               </span>
             </div>
             <p className="text-muted-foreground leading-relaxed">{entry.analysis}</p>
+            {entry.suggestion && (
+              <p className="text-foreground mt-1 font-medium">
+                💡 Suggestion : {entry.suggestion}
+              </p>
+            )}
           </div>
         ))}
 
@@ -110,74 +122,65 @@ const AiAnalysis: React.FC<AiAnalysisProps> = ({ moveHistory, fen, currentTurn, 
   );
 };
 
-function analyzeMove(move: Move, history: Move[], fen: string): AnalysisEntry {
+function analyzeMove(move: Move, history: Move[], fen: string, playerColor: 'w' | 'b'): AnalysisEntry {
   const moveNum = Math.ceil(history.length / 2);
+  const base = { moveNumber: moveNum, move: move.san, from: move.from, to: move.to };
 
-  // Simple heuristic analysis
+  // Try to find a better alternative
+  const tempGame = new Chess();
+  // Replay up to just before this move
+  const movesBeforeThis = history.slice(0, -1);
+  for (const m of movesBeforeThis) {
+    tempGame.move(m.san);
+  }
+  const alternatives = tempGame.moves({ verbose: true });
+
+  // Find a capturing move as suggestion if player didn't capture
+  const captureMoves = alternatives.filter(m => m.captured && m.from !== move.from);
+  const suggestion = captureMoves.length > 0 && !move.captured
+    ? `Vous auriez pu jouer ${captureMoves[0].from} → ${captureMoves[0].to} pour capturer.`
+    : undefined;
+
   if (move.captured) {
     const pieceValues: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9 };
     const capturedVal = pieceValues[move.captured] || 0;
     const movingVal = pieceValues[move.piece] || 0;
 
     if (capturedVal > movingVal) {
-      return {
-        moveNumber: moveNum, move: move.san, color: move.color,
-        analysis: `Excellente capture ! Vous gagnez du matériel (${capturedVal - movingVal} points d'avantage).`,
-        type: 'good',
-      };
+      return { ...base, analysis: `Excellente capture ! Gain de ${capturedVal - movingVal} points de matériel.`, type: 'good' };
     }
     if (capturedVal < movingVal) {
-      return {
-        moveNumber: moveNum, move: move.san, color: move.color,
-        analysis: `Attention : vous échangez une pièce de valeur ${movingVal} contre une de valeur ${capturedVal}. Vérifiez que c'est justifié tactiquement.`,
-        type: 'mistake',
-      };
+      return { ...base, analysis: `Attention : échange défavorable (${movingVal} pts contre ${capturedVal} pts).`, type: 'mistake', suggestion };
     }
-    return {
-      moveNumber: moveNum, move: move.san, color: move.color,
-      analysis: `Échange de pièces de valeur égale. Position équilibrée.`,
-      type: 'info',
-    };
+    return { ...base, analysis: `Échange de pièces de valeur égale.`, type: 'info' };
   }
 
   if (move.san.includes('+')) {
-    return {
-      moveNumber: moveNum, move: move.san, color: move.color,
-      analysis: `Échec ! Bonne pression sur le roi adverse. Cherchez à maintenir l'initiative.`,
-      type: 'good',
-    };
+    return { ...base, analysis: `Échec ! Bonne pression. Maintenez l'initiative.`, type: 'good' };
   }
 
   if (move.san === 'O-O' || move.san === 'O-O-O') {
-    return {
-      moveNumber: moveNum, move: move.san, color: move.color,
-      analysis: `Le roque met votre roi en sécurité et active votre tour. Excellent réflexe.`,
-      type: 'good',
-    };
+    return { ...base, analysis: `Le roque sécurise votre roi et active la tour. Excellent.`, type: 'good' };
   }
 
-  // Center control tips
   const centerSquares = ['d4', 'd5', 'e4', 'e5'];
   if (centerSquares.includes(move.to)) {
-    return {
-      moveNumber: moveNum, move: move.san, color: move.color,
-      analysis: `Bon contrôle du centre. Les cases centrales sont cruciales pour la domination.`,
-      type: 'tip',
-    };
+    return { ...base, analysis: `Bon contrôle du centre.`, type: 'tip', suggestion };
   }
 
   const tips = [
-    "Pensez à développer vos pièces mineures en début de partie.",
-    "Contrôlez le centre pour limiter les options adverses.",
-    "Connectez vos tours pour maximiser leur efficacité.",
+    "Développez vos pièces mineures rapidement.",
+    "Contrôlez le centre pour dominer la position.",
+    "Connectez vos tours sur la rangée arrière.",
     "Gardez une structure de pions solide.",
-    "Anticipez les menaces adverses avant de jouer.",
+    "Anticipez les menaces avant de jouer.",
   ];
 
   return {
-    moveNumber: moveNum, move: move.san, color: move.color,
+    ...base,
     analysis: tips[Math.floor(Math.random() * tips.length)],
     type: 'tip',
+    suggestion,
   };
 }
 

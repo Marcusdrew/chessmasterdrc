@@ -5,6 +5,12 @@ interface MoveHistoryProps {
   moveHistory: Move[];
 }
 
+const formatMove = (move: Move): string => {
+  if (move.san === 'O-O') return 'O-O';
+  if (move.san === 'O-O-O') return 'O-O-O';
+  return `${move.from} → ${move.to}`;
+};
+
 const MoveHistory: React.FC<MoveHistoryProps> = ({ moveHistory }) => {
   return (
     <div className="bg-card rounded-lg border border-border p-4 h-full flex flex-col">
@@ -32,8 +38,12 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ moveHistory }) => {
               Array.from({ length: Math.ceil(moveHistory.length / 2) }, (_, i) => (
                 <tr key={i} className="border-b border-border/50 last:border-0">
                   <td className="py-1.5 text-muted-foreground">{i + 1}.</td>
-                  <td className="py-1.5 text-foreground font-medium">{moveHistory[i * 2]?.san}</td>
-                  <td className="py-1.5 text-foreground font-medium">{moveHistory[i * 2 + 1]?.san || ''}</td>
+                  <td className="py-1.5 text-foreground font-medium">
+                    {moveHistory[i * 2] ? formatMove(moveHistory[i * 2]) : ''}
+                  </td>
+                  <td className="py-1.5 text-foreground font-medium">
+                    {moveHistory[i * 2 + 1] ? formatMove(moveHistory[i * 2 + 1]) : ''}
+                  </td>
                 </tr>
               ))
             )}
