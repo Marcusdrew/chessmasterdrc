@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Chess } from 'chess.js';
 import { useChessGame } from '@/hooks/useChessGame';
+import { getBestMove } from '@/lib/chessAI';
 import ChessBoard from '@/components/chess/ChessBoard';
 import MoveHistory from '@/components/chess/MoveHistory';
 import AiAnalysis from '@/components/chess/AiAnalysis';
+import GameEndModal from '@/components/chess/GameEndModal';
+import HintDisplay from '@/components/chess/HintDisplay';
 import type { Difficulty } from '@/lib/chessAI';
 
 const Game: React.FC = () => {
@@ -12,8 +16,22 @@ const Game: React.FC = () => {
   const playerColor = (searchParams.get('color') || 'w') as 'w' | 'b';
   const difficulty = (searchParams.get('difficulty') || 'intermediaire') as Difficulty;
 
-  const { fen, board, state, handleSquareClick, undoMove, isInCheck, currentTurn } =
+  const { fen, board, state, handleSquareClick, undoMove, resetGame, isInCheck, currentTurn } =
     useChessGame(true, playerColor, difficulty);
+
+  const [hint, setHint] = useState<{ from: string; to: string } | null>(null);
+
+  const handleHint = useCallback(() => {
+    if (state.gameStatus !== 'playing' || state.isAiThinking) return;
+    // Build a temp game from fen to find best move for player
+    const tempGame = new Chess(fen);
+    if (tempGame.turn() !== playerColor) return;
+    const best = getBestMove(tempGame, 'expert');
+    if (best) {
+      setHint({ from: best.from, to: best.to });
+      setTimeout(() => setHint(null), 5000);
+    }
+  }, [fen, playerColor, state.gameStatus, state.isAiThinking]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -28,9 +46,7 @@ const Game: React.FC = () => {
               ? state.isAiThinking
                 ? 'Adversaire réfléchit...'
                 : currentTurn === playerColor ? 'Votre tour' : "Tour de l'adversaire"
-              : state.gameStatus === 'checkmate'
-                ? `Échec et mat ! ${state.winner === playerColor ? 'Victoire' : 'Défaite'}`
-                : state.gameStatus === 'draw' ? 'Partie nulle' : 'Pat'
+              : ''
             }
           </span>
           <button
@@ -57,6 +73,7 @@ const Game: React.FC = () => {
             currentTurn={currentTurn}
             gameStatus={state.gameStatus}
             playerColor={playerColor}
+            onHint={handleHint}
           />
         </div>
 
@@ -83,12 +100,23 @@ const Game: React.FC = () => {
             currentTurn={currentTurn}
             gameStatus={state.gameStatus}
             playerColor={playerColor}
+            onHint={handleHint}
           />
         </div>
         <div className="flex-1 max-h-48">
           <MoveHistory moveHistory={state.moveHistory} />
         </div>
       </div>
+
+      <GameEndModal
+        gameStatus={state.gameStatus}
+        winner={state.winner}
+        playerColor={playerColor}
+        onRematch={resetGame}
+        onMenu={() => navigate('/')}
+      />
+
+      <HintDisplay hint={hint} onDismiss={() => setHint(null)} />
     </div>
   );
 };
