@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Chess } from 'chess.js';
 import { useChessGame } from '@/hooks/useChessGame';
+import { useElo } from '@/hooks/useElo';
 import { getBestMove } from '@/lib/chessAI';
 import ChessBoard from '@/components/chess/ChessBoard';
 import MoveHistory from '@/components/chess/MoveHistory';
@@ -19,14 +20,35 @@ const Game: React.FC = () => {
   const { fen, board, state, handleSquareClick, undoMove, resetGame, isInCheck, currentTurn } =
     useChessGame(true, playerColor, difficulty);
 
+  const { elo, updateElo } = useElo(difficulty);
+  const [eloChange, setEloChange] = useState<number | null>(null);
+  const [eloUpdated, setEloUpdated] = useState(false);
+
   const [hint, setHint] = useState<{ from: string; to: string } | null>(null);
+
+  // Update ELO when game ends
+  useEffect(() => {
+    if (state.gameStatus === 'playing' || eloUpdated) return;
+    const result = state.gameStatus === 'checkmate'
+      ? state.winner === playerColor ? 'win' : 'loss'
+      : 'draw';
+    const { change } = updateElo(result as 'win' | 'loss' | 'draw');
+    setEloChange(change);
+    setEloUpdated(true);
+  }, [state.gameStatus, state.winner, playerColor, eloUpdated, updateElo]);
+
+  // Reset eloUpdated on rematch
+  const handleRematch = useCallback(() => {
+    setEloUpdated(false);
+    setEloChange(null);
+    resetGame();
+  }, [resetGame]);
 
   const handleHint = useCallback(() => {
     if (state.gameStatus !== 'playing' || state.isAiThinking) return;
-    // Build a temp game from fen to find best move for player
     const tempGame = new Chess(fen);
     if (tempGame.turn() !== playerColor) return;
-    const best = getBestMove(tempGame, 'expert');
+    const best = getBestMove(tempGame, 'intermediaire');
     if (best) {
       setHint({ from: best.from, to: best.to });
       setTimeout(() => setHint(null), 5000);
@@ -36,9 +58,14 @@ const Game: React.FC = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <h1 className="text-xl font-display font-bold text-foreground">
-          Chess<span className="text-accent">Master</span>
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-display font-bold text-foreground">
+            Chess<span className="text-accent">Master</span>
+          </h1>
+          <span className="text-xs font-body bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">
+            ELO {elo}
+          </span>
+        </div>
         <div className="flex items-center gap-3 font-body text-sm">
           <span className={`flex items-center gap-1.5 ${state.gameStatus === 'playing' ? '' : 'opacity-50'}`}>
             <span className={`w-2.5 h-2.5 rounded-full ${currentTurn === 'w' ? 'bg-foreground' : 'bg-foreground/30'}`} />
@@ -112,8 +139,10 @@ const Game: React.FC = () => {
         gameStatus={state.gameStatus}
         winner={state.winner}
         playerColor={playerColor}
-        onRematch={resetGame}
+        onRematch={handleRematch}
         onMenu={() => navigate('/')}
+        eloChange={eloChange}
+        newElo={eloUpdated ? elo : null}
       />
 
       <HintDisplay hint={hint} onDismiss={() => setHint(null)} />

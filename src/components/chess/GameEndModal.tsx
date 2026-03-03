@@ -7,9 +7,11 @@ interface GameEndModalProps {
   playerColor: 'w' | 'b';
   onRematch: () => void;
   onMenu: () => void;
+  eloChange?: number | null;
+  newElo?: number | null;
 }
 
-const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerColor, onRematch, onMenu }) => {
+const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerColor, onRematch, onMenu, eloChange, newElo }) => {
   if (gameStatus === 'playing') return null;
 
   const isVictory = winner === playerColor;
@@ -42,7 +44,21 @@ const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerC
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         >
           <h2 className="text-3xl font-display font-bold text-foreground mb-2">{title}</h2>
-          <p className="text-sm font-body text-muted-foreground mb-6 leading-relaxed">{subtitle}</p>
+          <p className="text-sm font-body text-muted-foreground mb-4 leading-relaxed">{subtitle}</p>
+
+          {eloChange != null && newElo != null && (
+            <div className="mb-5 py-3 px-4 rounded-lg bg-secondary border border-border">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-xs font-body text-muted-foreground">ELO</span>
+                <span className={`text-sm font-display font-bold ${
+                  eloChange > 0 ? 'text-chess-valid' : eloChange < 0 ? 'text-destructive' : 'text-muted-foreground'
+                }`}>
+                  {eloChange > 0 ? '+' : ''}{eloChange}
+                </span>
+              </div>
+              <p className="text-2xl font-display font-bold text-foreground">{newElo}</p>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <button
