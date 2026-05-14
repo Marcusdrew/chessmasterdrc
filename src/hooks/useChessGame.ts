@@ -54,7 +54,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
           winner,
         }));
       }
-    }, 400 + Math.random() * 600);
+    }, 150);
   }, [updateGameStatus, difficulty]);
 
   // If AI plays first (player is black), trigger AI on mount
