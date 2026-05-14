@@ -43,10 +43,13 @@ const Game: React.FC = () => {
     setEloUpdated(true);
   }, [state.gameStatus, state.winner, playerColor, eloUpdated, updateElo]);
 
+  const [showReview, setShowReview] = useState(false);
+
   // Reset eloUpdated on rematch
   const handleRematch = useCallback(() => {
     setEloUpdated(false);
     setEloChange(null);
+    setShowReview(false);
     setWhiteTime(initialSeconds);
     setBlackTime(initialSeconds);
     resetGame();
