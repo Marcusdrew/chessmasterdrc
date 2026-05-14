@@ -161,6 +161,7 @@ const Game: React.FC = () => {
           isInCheck={isInCheck}
           currentTurn={currentTurn}
           playerColor={playerColor}
+          hint={hint}
           onSquareClick={handleSquareClick}
         />
 

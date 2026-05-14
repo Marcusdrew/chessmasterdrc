@@ -10,6 +10,8 @@ interface ChessSquareProps {
   isSelected: boolean;
   isValidMove: boolean;
   isCheck: boolean;
+  isHintFrom?: boolean;
+  isHintTo?: boolean;
   onClick: (square: Square) => void;
 }
 
@@ -19,7 +21,7 @@ const getSquareName = (row: number, col: number): Square => {
 };
 
 const ChessSquare: React.FC<ChessSquareProps> = ({
-  row, col, piece, isSelected, isValidMove, isCheck, onClick,
+  row, col, piece, isSelected, isValidMove, isCheck, isHintFrom, isHintTo, onClick,
 }) => {
   const square = getSquareName(row, col);
   const isLight = (row + col) % 2 === 0;
@@ -32,11 +34,21 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
         ${isLight ? 'bg-chess-light' : 'bg-chess-dark'}
         ${isSelected ? 'ring-2 ring-chess-selected ring-inset' : ''}
         ${isCheck ? 'ring-2 ring-chess-check ring-inset bg-chess-check/20' : ''}
+        ${isHintFrom ? 'ring-4 ring-amber-400 ring-inset !bg-amber-300/60' : ''}
+        ${isHintTo ? 'ring-4 ring-emerald-500 ring-inset !bg-emerald-300/50' : ''}
         hover:brightness-110
       `}
       onClick={() => onClick(square)}
       whileTap={{ scale: 0.95 }}
     >
+      {/* Hint pulse overlay */}
+      {(isHintFrom || isHintTo) && (
+        <motion.div
+          className={`absolute inset-0 ${isHintFrom ? 'bg-amber-400/30' : 'bg-emerald-400/30'} pointer-events-none`}
+          animate={{ opacity: [0.2, 0.7, 0.2] }}
+          transition={{ duration: 1.2, repeat: Infinity }}
+        />
+      )}
       {/* Valid move indicator */}
       {isValidMove && !piece && (
         <motion.div
