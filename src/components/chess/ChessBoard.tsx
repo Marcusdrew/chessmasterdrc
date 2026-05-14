@@ -81,6 +81,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
                   isSelected={selectedSquare === square}
                   isValidMove={validMoves.includes(square)}
                   isCheck={kingSquare === square}
+                  isHintFrom={hint?.from === square}
+                  isHintTo={hint?.to === square}
                   onClick={onSquareClick}
                 />
               );
