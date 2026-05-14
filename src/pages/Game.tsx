@@ -9,6 +9,7 @@ import MoveHistory from '@/components/chess/MoveHistory';
 import AiAnalysis from '@/components/chess/AiAnalysis';
 import GameEndModal from '@/components/chess/GameEndModal';
 import HintDisplay from '@/components/chess/HintDisplay';
+import GameReview from '@/components/chess/GameReview';
 import type { Difficulty } from '@/lib/chessAI';
 
 const Game: React.FC = () => {
@@ -42,10 +43,13 @@ const Game: React.FC = () => {
     setEloUpdated(true);
   }, [state.gameStatus, state.winner, playerColor, eloUpdated, updateElo]);
 
+  const [showReview, setShowReview] = useState(false);
+
   // Reset eloUpdated on rematch
   const handleRematch = useCallback(() => {
     setEloUpdated(false);
     setEloChange(null);
+    setShowReview(false);
     setWhiteTime(initialSeconds);
     setBlackTime(initialSeconds);
     resetGame();
@@ -194,6 +198,14 @@ const Game: React.FC = () => {
         onMenu={() => navigate('/')}
         eloChange={eloChange}
         newElo={eloUpdated ? elo : null}
+        onReview={state.moveHistory.length > 0 ? () => setShowReview(true) : undefined}
+      />
+
+      <GameReview
+        open={showReview}
+        onClose={() => setShowReview(false)}
+        moveHistory={state.moveHistory}
+        playerColor={playerColor}
       />
 
       <HintDisplay hint={hint} onDismiss={() => setHint(null)} />

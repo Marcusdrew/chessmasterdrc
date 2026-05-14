@@ -191,3 +191,17 @@ export function getBestMove(game: Chess, difficulty: Difficulty): Move | null {
 
   return bestMove;
 }
+
+// Static evaluation in centipawns from white's perspective
+export function evaluatePosition(game: Chess, depth: number = 2): number {
+  if (game.isGameOver()) {
+    if (game.isCheckmate()) {
+      // Side to move is mated
+      return game.turn() === 'w' ? -100000 : 100000;
+    }
+    return 0; // draw
+  }
+  const isMaximizing = game.turn() === 'w';
+  return minimax(game, depth, -Infinity, Infinity, isMaximizing);
+}
+
