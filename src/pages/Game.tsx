@@ -16,9 +16,14 @@ const Game: React.FC = () => {
   const navigate = useNavigate();
   const playerColor = (searchParams.get('color') || 'w') as 'w' | 'b';
   const difficulty = (searchParams.get('difficulty') || 'intermediaire') as Difficulty;
+  const timeParam = searchParams.get('time') || 'unlimited';
+  const initialSeconds = timeParam === 'unlimited' ? null : parseInt(timeParam, 10) * 60;
 
-  const { fen, board, state, handleSquareClick, undoMove, resetGame, isInCheck, currentTurn } =
+  const { fen, board, state, handleSquareClick, undoMove, resetGame, forceEnd, isInCheck, currentTurn } =
     useChessGame(true, playerColor, difficulty);
+
+  const [whiteTime, setWhiteTime] = useState<number | null>(initialSeconds);
+  const [blackTime, setBlackTime] = useState<number | null>(initialSeconds);
 
   const { elo, updateElo } = useElo(difficulty);
   const [eloChange, setEloChange] = useState<number | null>(null);
@@ -41,8 +46,33 @@ const Game: React.FC = () => {
   const handleRematch = useCallback(() => {
     setEloUpdated(false);
     setEloChange(null);
+    setWhiteTime(initialSeconds);
+    setBlackTime(initialSeconds);
     resetGame();
-  }, [resetGame]);
+  }, [resetGame, initialSeconds]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (initialSeconds === null || state.gameStatus !== 'playing') return;
+    const interval = setInterval(() => {
+      if (currentTurn === 'w') {
+        setWhiteTime(t => {
+          if (t === null) return t;
+          if (t <= 1) { forceEnd('w'); return 0; }
+          return t - 1;
+        });
+      } else {
+        setBlackTime(t => {
+          if (t === null) return t;
+          if (t <= 1) { forceEnd('b'); return 0; }
+          return t - 1;
+        });
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentTurn, state.gameStatus, initialSeconds, forceEnd]);
+
+  const fmt = (s: number | null) => s === null ? '∞' : `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
 
   const handleHint = useCallback(() => {
     if (state.gameStatus !== 'playing' || state.isAiThinking) return;
@@ -63,8 +93,22 @@ const Game: React.FC = () => {
             Chess<span className="text-accent">Master</span>
           </h1>
           <span className="text-xs font-body bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">
-            ELO {elo}
+            ELO {elo}{eloChange !== null && (
+              <span className={eloChange >= 0 ? 'text-chess-valid ml-1' : 'text-destructive ml-1'}>
+                ({eloChange > 0 ? '+' : ''}{eloChange})
+              </span>
+            )}
           </span>
+          {initialSeconds !== null && (
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className={`px-2 py-1 rounded ${currentTurn === 'w' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
+                ♔ {fmt(whiteTime)}
+              </span>
+              <span className={`px-2 py-1 rounded ${currentTurn === 'b' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
+                ♚ {fmt(blackTime)}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-3 font-body text-sm">
           <span className={`flex items-center gap-1.5 ${state.gameStatus === 'playing' ? '' : 'opacity-50'}`}>

@@ -54,7 +54,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
           winner,
         }));
       }
-    }, 400 + Math.random() * 600);
+    }, 150);
   }, [updateGameStatus, difficulty]);
 
   // If AI plays first (player is black), trigger AI on mount
@@ -161,6 +161,17 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
   const isInCheck = useCallback(() => gameRef.current.isCheck(), []);
   const currentTurn = useCallback(() => gameRef.current.turn(), []);
 
+  const forceEnd = useCallback((loser: 'w' | 'b') => {
+    setState(prev => ({
+      ...prev,
+      gameStatus: 'checkmate',
+      winner: loser === 'w' ? 'b' : 'w',
+      isAiThinking: false,
+      selectedSquare: null,
+      validMoves: [],
+    }));
+  }, []);
+
   return {
     fen,
     board: getBoard(),
@@ -168,6 +179,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
     handleSquareClick,
     resetGame,
     undoMove,
+    forceEnd,
     isInCheck: isInCheck(),
     currentTurn: currentTurn(),
   };
