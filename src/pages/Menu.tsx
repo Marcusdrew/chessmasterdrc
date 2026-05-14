@@ -45,6 +45,18 @@ const Menu: React.FC = () => {
         >
           📖 Techniques
         </motion.button>
+
+        <motion.button
+          onClick={() => navigate('/apprendre')}
+          className="w-full py-4 px-8 rounded-lg bg-secondary text-secondary-foreground font-display text-lg font-semibold tracking-wide hover:opacity-90 transition-opacity border border-border"
+          initial={{ x: -40, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          🎓 Apprendre
+        </motion.button>
       </div>
 
       <motion.p
