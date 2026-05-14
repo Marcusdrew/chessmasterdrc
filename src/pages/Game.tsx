@@ -46,8 +46,33 @@ const Game: React.FC = () => {
   const handleRematch = useCallback(() => {
     setEloUpdated(false);
     setEloChange(null);
+    setWhiteTime(initialSeconds);
+    setBlackTime(initialSeconds);
     resetGame();
-  }, [resetGame]);
+  }, [resetGame, initialSeconds]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (initialSeconds === null || state.gameStatus !== 'playing') return;
+    const interval = setInterval(() => {
+      if (currentTurn === 'w') {
+        setWhiteTime(t => {
+          if (t === null) return t;
+          if (t <= 1) { forceEnd('w'); return 0; }
+          return t - 1;
+        });
+      } else {
+        setBlackTime(t => {
+          if (t === null) return t;
+          if (t <= 1) { forceEnd('b'); return 0; }
+          return t - 1;
+        });
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentTurn, state.gameStatus, initialSeconds, forceEnd]);
+
+  const fmt = (s: number | null) => s === null ? '∞' : `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
 
   const handleHint = useCallback(() => {
     if (state.gameStatus !== 'playing' || state.isAiThinking) return;
