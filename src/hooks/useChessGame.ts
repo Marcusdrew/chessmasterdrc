@@ -49,15 +49,15 @@ export const useChessGame = (
     if (game.isGameOver()) return;
     setState(prev => ({ ...prev, isAiThinking: true }));
 
-    // Natural thinking delay based on difficulty (ms)
+    // Natural thinking delay (ms) — gives the player time to react
     const delayRange: Record<Difficulty, [number, number]> = {
-      amateur: [600, 1200],
-      debutant: [900, 1800],
-      intermediaire: [1400, 2600],
-      avance: [1800, 3400],
-      expert: [2200, 4200],
+      amateur: [800, 1200],
+      debutant: [1600, 2400],
+      intermediaire: [2100, 2900],
+      avance: [2600, 3400],
+      expert: [3000, 4000],
     };
-    const [min, max] = delayRange[difficulty] ?? [1200, 2400];
+    const [min, max] = delayRange[difficulty] ?? [2000, 3000];
     const delay = min + Math.random() * (max - min);
 
     setTimeout(() => {
