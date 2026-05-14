@@ -20,11 +20,23 @@ const Game: React.FC = () => {
   const timeParam = searchParams.get('time') || 'unlimited';
   const initialSeconds = timeParam === 'unlimited' ? null : parseInt(timeParam, 10) * 60;
 
-  const { fen, board, state, handleSquareClick, undoMove, resetGame, forceEnd, isInCheck, currentTurn } =
-    useChessGame(true, playerColor, difficulty);
+  // Persistence key based on game configuration
+  const saveKey = `chessmaster_game_${playerColor}_${difficulty}_${timeParam}`;
+  const savedRef = useRef<{ moves: string[]; whiteTime: number | null; blackTime: number | null } | null>(null);
+  if (savedRef.current === null) {
+    try {
+      const raw = localStorage.getItem(saveKey);
+      savedRef.current = raw ? JSON.parse(raw) : { moves: [], whiteTime: initialSeconds, blackTime: initialSeconds };
+    } catch {
+      savedRef.current = { moves: [], whiteTime: initialSeconds, blackTime: initialSeconds };
+    }
+  }
 
-  const [whiteTime, setWhiteTime] = useState<number | null>(initialSeconds);
-  const [blackTime, setBlackTime] = useState<number | null>(initialSeconds);
+  const { fen, board, state, handleSquareClick, undoMove, resetGame, forceEnd, isInCheck, currentTurn } =
+    useChessGame(true, playerColor, difficulty, savedRef.current.moves);
+
+  const [whiteTime, setWhiteTime] = useState<number | null>(savedRef.current.whiteTime ?? initialSeconds);
+  const [blackTime, setBlackTime] = useState<number | null>(savedRef.current.blackTime ?? initialSeconds);
 
   const { elo, updateElo } = useElo(difficulty);
   const [eloChange, setEloChange] = useState<number | null>(null);
@@ -32,16 +44,27 @@ const Game: React.FC = () => {
 
   const [hint, setHint] = useState<{ from: string; to: string } | null>(null);
 
-  // Update ELO when game ends
+  // Persist game state on every change
+  useEffect(() => {
+    if (state.gameStatus !== 'playing') {
+      localStorage.removeItem(saveKey);
+      return;
+    }
+    const sanMoves = state.moveHistory.map(m => m.san);
+    localStorage.setItem(saveKey, JSON.stringify({ moves: sanMoves, whiteTime, blackTime }));
+  }, [fen, state.moveHistory, whiteTime, blackTime, state.gameStatus, saveKey]);
+
+  // Update ELO when game ends — only if at least one move was played
   useEffect(() => {
     if (state.gameStatus === 'playing' || eloUpdated) return;
+    if (state.moveHistory.length === 0) { setEloUpdated(true); return; }
     const result = state.gameStatus === 'checkmate'
       ? state.winner === playerColor ? 'win' : 'loss'
       : 'draw';
     const { change } = updateElo(result as 'win' | 'loss' | 'draw');
     setEloChange(change);
     setEloUpdated(true);
-  }, [state.gameStatus, state.winner, playerColor, eloUpdated, updateElo]);
+  }, [state.gameStatus, state.winner, state.moveHistory.length, playerColor, eloUpdated, updateElo]);
 
   const [showReview, setShowReview] = useState(false);
 
