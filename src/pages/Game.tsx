@@ -51,11 +51,17 @@ const Game: React.FC = () => {
     resetGame();
   }, [resetGame, initialSeconds]);
 
-  // Countdown timer
+  // Countdown timer — use refs to avoid stale closures and interval recreation
+  const turnRef = useRef(currentTurn);
+  const statusRef = useRef(state.gameStatus);
+  useEffect(() => { turnRef.current = currentTurn; }, [currentTurn]);
+  useEffect(() => { statusRef.current = state.gameStatus; }, [state.gameStatus]);
+
   useEffect(() => {
-    if (initialSeconds === null || state.gameStatus !== 'playing') return;
+    if (initialSeconds === null) return;
     const interval = setInterval(() => {
-      if (currentTurn === 'w') {
+      if (statusRef.current !== 'playing') return;
+      if (turnRef.current === 'w') {
         setWhiteTime(t => {
           if (t === null) return t;
           if (t <= 1) { forceEnd('w'); return 0; }
@@ -70,7 +76,7 @@ const Game: React.FC = () => {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [currentTurn, state.gameStatus, initialSeconds, forceEnd]);
+  }, [initialSeconds, forceEnd]);
 
   const fmt = (s: number | null) => s === null ? '∞' : `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
 
