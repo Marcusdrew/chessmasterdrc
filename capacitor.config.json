@@ -1,0 +1,9 @@
+{
+  "appId": "app.lovable.f6d9c26355214054b79a516781cd69a6",
+  "appName": "chessmasterdrc",
+  "webDir": "dist",
+  "server": {
+    "url": "https://f6d9c263-5521-4054-b79a-516781cd69a6.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  }
+}
