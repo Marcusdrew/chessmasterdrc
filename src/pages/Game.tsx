@@ -198,6 +198,14 @@ const Game: React.FC = () => {
         onMenu={() => navigate('/')}
         eloChange={eloChange}
         newElo={eloUpdated ? elo : null}
+        onReview={state.moveHistory.length > 0 ? () => setShowReview(true) : undefined}
+      />
+
+      <GameReview
+        open={showReview}
+        onClose={() => setShowReview(false)}
+        moveHistory={state.moveHistory}
+        playerColor={playerColor}
       />
 
       <HintDisplay hint={hint} onDismiss={() => setHint(null)} />
