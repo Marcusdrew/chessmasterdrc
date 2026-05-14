@@ -38,6 +38,17 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
     if (game.isGameOver()) return;
     setState(prev => ({ ...prev, isAiThinking: true }));
 
+    // Natural thinking delay based on difficulty (ms)
+    const delayRange: Record<Difficulty, [number, number]> = {
+      amateur: [600, 1200],
+      debutant: [900, 1800],
+      intermediaire: [1400, 2600],
+      avance: [1800, 3400],
+      expert: [2200, 4200],
+    };
+    const [min, max] = delayRange[difficulty] ?? [1200, 2400];
+    const delay = min + Math.random() * (max - min);
+
     setTimeout(() => {
       const chosen = getBestMove(game, difficulty);
       if (!chosen) return;
@@ -54,7 +65,7 @@ export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w',
           winner,
         }));
       }
-    }, 150);
+    }, delay);
   }, [updateGameStatus, difficulty]);
 
   // If AI plays first (player is black), trigger AI on mount
