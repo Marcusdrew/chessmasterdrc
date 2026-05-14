@@ -11,13 +11,24 @@ export interface GameState {
   winner: 'w' | 'b' | null;
 }
 
-export const useChessGame = (vsAi: boolean = true, playerColor: 'w' | 'b' = 'w', difficulty: Difficulty = 'intermediaire') => {
-  const gameRef = useRef(new Chess());
+export const useChessGame = (
+  vsAi: boolean = true,
+  playerColor: 'w' | 'b' = 'w',
+  difficulty: Difficulty = 'intermediaire',
+  initialMoves: string[] = []
+) => {
+  const gameRef = useRef<Chess>((() => {
+    const g = new Chess();
+    for (const san of initialMoves) {
+      try { g.move(san); } catch { /* ignore corrupt entry */ }
+    }
+    return g;
+  })());
   const [fen, setFen] = useState(gameRef.current.fen());
   const [state, setState] = useState<GameState>({
     selectedSquare: null,
     validMoves: [],
-    moveHistory: [],
+    moveHistory: gameRef.current.history({ verbose: true }) as Move[],
     isAiThinking: false,
     gameStatus: 'playing',
     winner: null,
