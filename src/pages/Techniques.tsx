@@ -401,30 +401,70 @@ const Techniques: React.FC = () => {
           </>
         )}
 
-        {activeTab === 'puzzles' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {puzzles.map(puzzle => (
+        {activeTab === 'puzzles' && (() => {
+          // Daily puzzle: deterministic by date (YYYY-MM-DD)
+          const today = new Date();
+          const dayKey = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+          const dailyPuzzle = puzzles[dayKey % puzzles.length];
+          const others = puzzles.filter(p => p.id !== dailyPuzzle.id);
+          return (
+            <>
+              {/* Daily puzzle highlight */}
               <motion.div
-                key={puzzle.id}
-                className="bg-card border border-border rounded-lg p-5 cursor-pointer hover:border-accent/50 transition-colors"
-                onClick={() => setSelectedPuzzle(puzzle)}
+                onClick={() => setSelectedPuzzle(dailyPuzzle)}
                 whileHover={{ y: -2 }}
+                className="mb-6 bg-gradient-to-br from-accent/15 via-card to-card border-2 border-accent/40 rounded-xl p-5 cursor-pointer transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-display font-semibold text-foreground text-sm">{puzzle.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">⭐</span>
+                    <div>
+                      <p className="text-[10px] font-body uppercase tracking-widest text-accent">
+                        Puzzle du jour · {today.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                      </p>
+                      <h3 className="font-display font-bold text-foreground text-lg">{dailyPuzzle.title}</h3>
+                    </div>
+                  </div>
                   <span className={`text-[10px] font-body px-2 py-0.5 rounded-full ${
-                    puzzle.difficulty === 'Débutant' ? 'bg-chess-valid/10 text-chess-valid' :
-                    puzzle.difficulty === 'Intermédiaire' ? 'bg-accent/10 text-accent' :
+                    dailyPuzzle.difficulty === 'Débutant' ? 'bg-chess-valid/10 text-chess-valid' :
+                    dailyPuzzle.difficulty === 'Intermédiaire' ? 'bg-accent/10 text-accent' :
                     'bg-destructive/10 text-destructive'
                   }`}>
-                    {puzzle.difficulty}
+                    {dailyPuzzle.difficulty}
                   </span>
                 </div>
-                <p className="text-sm text-foreground/80 font-body">{puzzle.description}</p>
+                <p className="text-sm text-foreground/80 font-body">{dailyPuzzle.description}</p>
+                <p className="text-xs text-accent font-body mt-2">→ Résolvez le défi quotidien</p>
               </motion.div>
-            ))}
-          </div>
-        )}
+
+              <h3 className="text-sm font-display font-semibold text-muted-foreground uppercase tracking-widest mb-3">
+                Tous les puzzles
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {others.map(puzzle => (
+                  <motion.div
+                    key={puzzle.id}
+                    className="bg-card border border-border rounded-lg p-5 cursor-pointer hover:border-accent/50 transition-colors"
+                    onClick={() => setSelectedPuzzle(puzzle)}
+                    whileHover={{ y: -2 }}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-display font-semibold text-foreground text-sm">{puzzle.title}</h3>
+                      <span className={`text-[10px] font-body px-2 py-0.5 rounded-full ${
+                        puzzle.difficulty === 'Débutant' ? 'bg-chess-valid/10 text-chess-valid' :
+                        puzzle.difficulty === 'Intermédiaire' ? 'bg-accent/10 text-accent' :
+                        'bg-destructive/10 text-destructive'
+                      }`}>
+                        {puzzle.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground/80 font-body">{puzzle.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </>
+          );
+        })()}
 
         {/* Technique modal */}
         <AnimatePresence>
