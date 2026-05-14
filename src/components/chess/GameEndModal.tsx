@@ -62,6 +62,14 @@ const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerC
           )}
 
           <div className="flex flex-col gap-2">
+            {onReview && (
+              <button
+                onClick={onReview}
+                className="w-full py-2.5 rounded-lg bg-accent text-accent-foreground font-body font-medium text-sm hover:opacity-90 transition-opacity"
+              >
+                📊 Voir l'analyse de la partie
+              </button>
+            )}
             <button
               onClick={onRematch}
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-body font-medium text-sm hover:bg-primary/90 transition-colors"
