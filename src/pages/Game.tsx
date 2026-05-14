@@ -106,12 +106,12 @@ const Game: React.FC = () => {
             )}
           </span>
           {initialSeconds !== null && (
-            <div className="flex items-center gap-2 text-xs font-mono">
-              <span className={`px-2 py-1 rounded ${currentTurn === 'w' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
-                ♔ {fmt(whiteTime)}
+            <div className="flex items-center gap-2 text-xs font-mono" translate="no">
+              <span className={`px-2 py-1 rounded notranslate ${currentTurn === 'w' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`} translate="no">
+                ♔ <span translate="no">{fmt(whiteTime)}</span>
               </span>
-              <span className={`px-2 py-1 rounded ${currentTurn === 'b' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
-                ♚ {fmt(blackTime)}
+              <span className={`px-2 py-1 rounded notranslate ${currentTurn === 'b' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`} translate="no">
+                ♚ <span translate="no">{fmt(blackTime)}</span>
               </span>
             </div>
           )}
