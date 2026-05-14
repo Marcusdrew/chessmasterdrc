@@ -9,9 +9,10 @@ interface GameEndModalProps {
   onMenu: () => void;
   eloChange?: number | null;
   newElo?: number | null;
+  onReview?: () => void;
 }
 
-const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerColor, onRematch, onMenu, eloChange, newElo }) => {
+const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerColor, onRematch, onMenu, eloChange, newElo, onReview }) => {
   if (gameStatus === 'playing') return null;
 
   const isVictory = winner === playerColor;
