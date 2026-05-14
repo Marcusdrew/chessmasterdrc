@@ -16,9 +16,14 @@ const Game: React.FC = () => {
   const navigate = useNavigate();
   const playerColor = (searchParams.get('color') || 'w') as 'w' | 'b';
   const difficulty = (searchParams.get('difficulty') || 'intermediaire') as Difficulty;
+  const timeParam = searchParams.get('time') || 'unlimited';
+  const initialSeconds = timeParam === 'unlimited' ? null : parseInt(timeParam, 10) * 60;
 
-  const { fen, board, state, handleSquareClick, undoMove, resetGame, isInCheck, currentTurn } =
+  const { fen, board, state, handleSquareClick, undoMove, resetGame, forceEnd, isInCheck, currentTurn } =
     useChessGame(true, playerColor, difficulty);
+
+  const [whiteTime, setWhiteTime] = useState<number | null>(initialSeconds);
+  const [blackTime, setBlackTime] = useState<number | null>(initialSeconds);
 
   const { elo, updateElo } = useElo(difficulty);
   const [eloChange, setEloChange] = useState<number | null>(null);
