@@ -93,8 +93,22 @@ const Game: React.FC = () => {
             Chess<span className="text-accent">Master</span>
           </h1>
           <span className="text-xs font-body bg-accent/10 text-accent px-2 py-0.5 rounded-full font-medium">
-            ELO {elo}
+            ELO {elo}{eloChange !== null && (
+              <span className={eloChange >= 0 ? 'text-chess-valid ml-1' : 'text-destructive ml-1'}>
+                ({eloChange > 0 ? '+' : ''}{eloChange})
+              </span>
+            )}
           </span>
+          {initialSeconds !== null && (
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className={`px-2 py-1 rounded ${currentTurn === 'w' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
+                ♔ {fmt(whiteTime)}
+              </span>
+              <span className={`px-2 py-1 rounded ${currentTurn === 'b' && state.gameStatus === 'playing' ? 'bg-foreground text-background' : 'bg-muted text-muted-foreground'}`}>
+                ♚ {fmt(blackTime)}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-3 font-body text-sm">
           <span className={`flex items-center gap-1.5 ${state.gameStatus === 'playing' ? '' : 'opacity-50'}`}>
