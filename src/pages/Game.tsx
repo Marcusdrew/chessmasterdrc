@@ -9,6 +9,7 @@ import MoveHistory from '@/components/chess/MoveHistory';
 import AiAnalysis from '@/components/chess/AiAnalysis';
 import GameEndModal from '@/components/chess/GameEndModal';
 import HintDisplay from '@/components/chess/HintDisplay';
+import GameReview from '@/components/chess/GameReview';
 import type { Difficulty } from '@/lib/chessAI';
 
 const Game: React.FC = () => {
