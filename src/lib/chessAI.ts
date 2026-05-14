@@ -95,6 +95,19 @@ function evaluateBoard(game: Chess): number {
   return score;
 }
 
+function orderMoves(moves: Move[]): Move[] {
+  // Captures first (MVV-LVA-ish), then checks, then quiet moves — boosts alpha-beta cutoffs
+  return [...moves].sort((a, b) => {
+    const aScore = (a.captured ? (PIECE_VALUES[a.captured] || 0) - (PIECE_VALUES[a.piece] || 0) / 10 : 0)
+      + (a.san.includes('+') ? 50 : 0)
+      + (a.promotion ? 800 : 0);
+    const bScore = (b.captured ? (PIECE_VALUES[b.captured] || 0) - (PIECE_VALUES[b.piece] || 0) / 10 : 0)
+      + (b.san.includes('+') ? 50 : 0)
+      + (b.promotion ? 800 : 0);
+    return bScore - aScore;
+  });
+}
+
 function minimax(
   game: Chess,
   depth: number,
@@ -106,27 +119,27 @@ function minimax(
     return evaluateBoard(game);
   }
 
-  const moves = game.moves();
+  const moves = orderMoves(game.moves({ verbose: true }));
 
   if (isMaximizing) {
     let maxEval = -Infinity;
     for (const move of moves) {
-      game.move(move);
+      game.move(move.san);
       const eval_ = minimax(game, depth - 1, alpha, beta, false);
       game.undo();
-      maxEval = Math.max(maxEval, eval_);
-      alpha = Math.max(alpha, eval_);
+      if (eval_ > maxEval) maxEval = eval_;
+      if (eval_ > alpha) alpha = eval_;
       if (beta <= alpha) break;
     }
     return maxEval;
   } else {
     let minEval = Infinity;
     for (const move of moves) {
-      game.move(move);
+      game.move(move.san);
       const eval_ = minimax(game, depth - 1, alpha, beta, true);
       game.undo();
-      minEval = Math.min(minEval, eval_);
-      beta = Math.min(beta, eval_);
+      if (eval_ < minEval) minEval = eval_;
+      if (eval_ < beta) beta = eval_;
       if (beta <= alpha) break;
     }
     return minEval;
@@ -136,11 +149,11 @@ function minimax(
 export type Difficulty = 'amateur' | 'debutant' | 'intermediaire' | 'avance' | 'expert';
 
 const DIFFICULTY_CONFIG: Record<Difficulty, { depth: number; randomness: number }> = {
-  amateur: { depth: 0, randomness: 1.0 },
+  amateur: { depth: 1, randomness: 0.85 },
   debutant: { depth: 1, randomness: 0.4 },
   intermediaire: { depth: 2, randomness: 0.15 },
-  avance: { depth: 3, randomness: 0.05 },
-  expert: { depth: 4, randomness: 0.0 },
+  avance: { depth: 2, randomness: 0.05 },
+  expert: { depth: 3, randomness: 0.0 },
 };
 
 export function getBestMove(game: Chess, difficulty: Difficulty): Move | null {
@@ -149,22 +162,17 @@ export function getBestMove(game: Chess, difficulty: Difficulty): Move | null {
 
   const config = DIFFICULTY_CONFIG[difficulty];
 
-  // Random chance to play a random move (simulates mistakes)
   if (Math.random() < config.randomness) {
     return moves[Math.floor(Math.random() * moves.length)];
   }
 
-  if (config.depth === 0) {
-    // Amateur: fully random
-    return moves[Math.floor(Math.random() * moves.length)];
-  }
-
   const isMaximizing = game.turn() === 'w';
-  let bestMove = moves[0];
+  const ordered = orderMoves(moves);
+  let bestMove = ordered[0];
   let bestEval = isMaximizing ? -Infinity : Infinity;
 
-  for (const move of moves) {
-    game.move(move);
+  for (const move of ordered) {
+    game.move(move.san);
     const eval_ = minimax(game, config.depth - 1, -Infinity, Infinity, !isMaximizing);
     game.undo();
 
