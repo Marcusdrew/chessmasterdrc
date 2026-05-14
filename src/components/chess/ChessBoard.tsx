@@ -10,11 +10,12 @@ interface ChessBoardProps {
   isInCheck: boolean;
   currentTurn: string;
   playerColor: 'w' | 'b';
+  hint?: { from: string; to: string } | null;
   onSquareClick: (square: Square) => void;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
-  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, onSquareClick,
+  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, hint, onSquareClick,
 }) => {
   const findKingSquare = (): string | null => {
     for (let r = 0; r < 8; r++) {
