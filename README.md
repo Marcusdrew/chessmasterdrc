@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# ChessMaster
 
-## Project info
+ChessMaster est une application d'échecs en français conçue pour apprendre, s'entraîner et progresser seul, directement depuis son navigateur.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Ce que fait l'application aujourd'hui
 
-## How can I edit this code?
+- **Partie contre l'IA** : affrontez une intelligence artificielle réglable sur 5 niveaux de difficulté (Amateur, Débutant, Intermédiaire, Avancé, Expert).
+- **ELO personnel** : un score ELO local suit votre progression après chaque partie gagnée, perdue ou nulle.
+- **Coach IA en partie** : après chacun de vos coups, l'IA peut commenter votre choix et vous orienter.
+- **Bouton indice** : demandez un indice à tout moment ; la case de départ et la case d'arrivée sont mises en évidence.
+- **Analyse post-partie** : à la fin de la partie, consultez une revue détaillée de chaque coup classé (meilleur coup, excellent, bon, imprécision, erreur, gaffe) avec le meilleur coup suggéré et un score de précision.
+- **Section Apprendre** : guides sur chaque pièce, règles essentielles, concepts clés des échecs et explications du système ELO.
+- **Techniques et ouvertures** : 10 leçons illustrées (mat du berger, gambit italien, défense sicilienne, etc.) avec mini-échiquiers interactifs.
+- **Puzzles tactiques** : 12 puzzles classés par difficulté, dont un **puzzle du jour** qui change automatiquement chaque jour.
+- **Sauvegarde de partie** : la partie en cours est conservée dans le navigateur pour reprendre après un rechargement accidentel.
 
-There are several ways of editing your application.
+> L'application est actuellement en solo : aucun multijoueur, aucun classement en ligne, aucun compte utilisateur et aucun mécanisme "spécial" ou "révolutionnaire" n'est présent.
 
-**Use Lovable**
+## Technologies utilisées
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- [Vite](https://vitejs.dev/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [chess.js](https://github.com/jhlywa/chess.js)
 
-Changes made via Lovable will be committed automatically to this repo.
+## Comment modifier ce projet ?
 
-**Use your preferred IDE**
+### Avec Lovable
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Visitez votre projet sur [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) et commencez à prompt. Les modifications sont automatiquement commitées dans ce dépôt.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Dans votre IDE préféré
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Cloner le dépôt
+git clone <URL_DU_DEPOT>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Se rendre dans le dossier
+cd <NOM_DU_PROJET>
 
-# Step 3: Install the necessary dependencies.
+# 3. Installer les dépendances
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Lancer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Directement sur GitHub
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Ouvrez le fichier souhaité.
+- Cliquez sur le bouton **Edit** (icône crayon) en haut à droite.
+- Modifiez le fichier et committez vos changements.
 
-**Use GitHub Codespaces**
+### Avec GitHub Codespaces
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Rendez-vous sur la page principale du dépôt.
+- Cliquez sur le bouton vert **Code**.
+- Sélectionnez l'onglet **Codespaces**.
+- Cliquez sur **New codespace** pour lancer un environnement.
+- Modifiez, puis committez et poussez vos changements.
 
-## What technologies are used for this project?
+## Déploiement
 
-This project is built with:
+Ouvrez [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID), puis cliquez sur **Share → Publish** pour publier l'application.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Domaine personnalisé
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Vous pouvez connecter un domaine personnalisé depuis **Project → Settings → Domains**. Plus d'informations : [documentation Lovable sur les domaines personnalisés](https://docs.lovable.dev/features/custom-domain#custom-domain).
