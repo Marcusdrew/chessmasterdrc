@@ -1,12 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import SensationsToggle from '@/components/SensationsToggle';
 
 const Menu: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+    <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <SensationsToggle className="absolute top-4 left-4" />
+      <LanguageSwitcher className="absolute top-4 right-4" />
+
       <motion.div
         className="text-center mb-16"
         initial={{ y: -30, opacity: 0 }}
@@ -17,7 +24,7 @@ const Menu: React.FC = () => {
           Chess<span className="text-accent">Master</span>
         </h1>
         <p className="text-sm font-body text-muted-foreground tracking-widest uppercase mt-3">
-          Stratégie • Intelligence • Maîtrise
+          {t('menu.tagline')}
         </p>
       </motion.div>
 
@@ -31,7 +38,7 @@ const Menu: React.FC = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          ♟ Jouer
+          ♟ {t('menu.play')}
         </motion.button>
 
         <motion.button
@@ -43,7 +50,7 @@ const Menu: React.FC = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          📖 Techniques
+          📖 {t('menu.techniques')}
         </motion.button>
 
         <motion.button
@@ -55,7 +62,7 @@ const Menu: React.FC = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          🎓 Apprendre
+          🎓 {t('menu.learn')}
         </motion.button>
       </div>
 
@@ -65,7 +72,7 @@ const Menu: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
       >
-        Propulsé par l'Intelligence Artificielle
+        {t('menu.poweredBy')}
       </motion.p>
     </div>
   );

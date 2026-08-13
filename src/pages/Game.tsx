@@ -1,20 +1,23 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Chess } from 'chess.js';
 import { useChessGame } from '@/hooks/useChessGame';
 import { useElo } from '@/hooks/useElo';
-import { getBestMove } from '@/lib/chessAI';
+import { useChessAIWorker } from '@/hooks/useChessAIWorker';
 import ChessBoard from '@/components/chess/ChessBoard';
 import MoveHistory from '@/components/chess/MoveHistory';
 import AiAnalysis from '@/components/chess/AiAnalysis';
 import GameEndModal from '@/components/chess/GameEndModal';
 import HintDisplay from '@/components/chess/HintDisplay';
 import GameReview from '@/components/chess/GameReview';
+import SensationsToggle from '@/components/SensationsToggle';
 import type { Difficulty } from '@/lib/chessAI';
 
 const Game: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const playerColor = (searchParams.get('color') || 'w') as 'w' | 'b';
   const difficulty = (searchParams.get('difficulty') || 'intermediaire') as Difficulty;
   const timeParam = searchParams.get('time') || 'unlimited';
@@ -34,6 +37,12 @@ const Game: React.FC = () => {
 
   const { fen, board, state, handleSquareClick, undoMove, resetGame, forceEnd, isInCheck, currentTurn } =
     useChessGame(true, playerColor, difficulty, savedRef.current.moves);
+  const { getMoveAsync } = useChessAIWorker();
+  // Always holds the latest fen, so an in-flight hint request can tell if
+  // the position has since moved on and discard itself instead of pointing
+  // at squares that no longer mean what they used to.
+  const latestFenRef = useRef(fen);
+  latestFenRef.current = fen;
 
   const [whiteTime, setWhiteTime] = useState<number | null>(savedRef.current.whiteTime ?? initialSeconds);
   const [blackTime, setBlackTime] = useState<number | null>(savedRef.current.blackTime ?? initialSeconds);
@@ -111,12 +120,17 @@ const Game: React.FC = () => {
     if (state.gameStatus !== 'playing' || state.isAiThinking) return;
     const tempGame = new Chess(fen);
     if (tempGame.turn() !== playerColor) return;
-    const best = getBestMove(tempGame, 'intermediaire');
-    if (best) {
+    const requestedFen = fen;
+    // Real difficulty of this game, and ignoreRandomness so the hint always
+    // shows the engine's actual best move rather than occasionally one of
+    // its deliberate mistakes (those exist to make the opponent feel human,
+    // not to make hints unreliable).
+    getMoveAsync(fen, difficulty, { ignoreRandomness: true }).then(best => {
+      if (!best || latestFenRef.current !== requestedFen) return;
       setHint({ from: best.from, to: best.to });
       setTimeout(() => setHint(null), 5000);
-    }
-  }, [fen, playerColor, state.gameStatus, state.isAiThinking]);
+    });
+  }, [fen, playerColor, difficulty, state.gameStatus, state.isAiThinking, getMoveAsync]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -148,23 +162,24 @@ const Game: React.FC = () => {
             <span className={`w-2.5 h-2.5 rounded-full ${currentTurn === 'w' ? 'bg-foreground' : 'bg-foreground/30'}`} />
             {state.gameStatus === 'playing'
               ? state.isAiThinking
-                ? 'Adversaire réfléchit...'
-                : currentTurn === playerColor ? 'Votre tour' : "Tour de l'adversaire"
+                ? t('game.opponentThinking')
+                : currentTurn === playerColor ? t('game.yourTurn') : t('game.opponentTurn')
               : ''
             }
           </span>
+          <SensationsToggle className="border border-border rounded" />
           <button
             onClick={undoMove}
             disabled={state.moveHistory.length === 0 || state.isAiThinking}
             className="px-3 py-1.5 rounded border border-border text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            ↩ Undo
+            ↩ {t('game.undo')}
           </button>
           <button
             onClick={() => navigate('/')}
             className="px-3 py-1.5 rounded border border-border text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            Menu
+            {t('common.menu')}
           </button>
         </div>
       </header>

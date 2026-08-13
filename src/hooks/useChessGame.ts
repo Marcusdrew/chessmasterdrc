@@ -1,6 +1,11 @@
 import { useState, useCallback, useRef } from 'react';
 import { Chess, Square, Move } from 'chess.js';
-import { getBestMove, Difficulty } from '@/lib/chessAI';
+import { Difficulty } from '@/lib/chessAI';
+import { useChessAIWorker } from './useChessAIWorker';
+import { useSensations } from '@/hooks/useSensations';
+import { classifyMoveSound } from '@/lib/sound';
+
+const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 export interface GameState {
   selectedSquare: Square | null;
@@ -24,6 +29,15 @@ export const useChessGame = (
     }
     return g;
   })());
+  const { getMoveAsync } = useChessAIWorker();
+  const { triggerFeedback } = useSensations();
+  // Bumped by resetGame so an AI move computed for a game that's since been
+  // reset gets silently dropped instead of landing on the new board.
+  const generationRef = useRef(0);
+  // Which generation is currently being computed for, if any — also doubles
+  // as a re-entrancy guard so two AI computations never overlap.
+  const thinkingForGenerationRef = useRef<number | null>(null);
+
   const [fen, setFen] = useState(gameRef.current.fen());
   const [state, setState] = useState<GameState>({
     selectedSquare: null,
@@ -47,9 +61,17 @@ export const useChessGame = (
   const makeAiMove = useCallback(() => {
     const game = gameRef.current;
     if (game.isGameOver()) return;
+
+    const myGeneration = generationRef.current;
+    if (thinkingForGenerationRef.current === myGeneration) return; // already computing this one
+    thinkingForGenerationRef.current = myGeneration;
     setState(prev => ({ ...prev, isAiThinking: true }));
 
-    // Natural thinking delay (ms) — gives the player time to react
+    // Natural thinking delay (ms) — gives the player time to react. Run in
+    // parallel with the real computation (not stacked after it) via
+    // Promise.all, so moving the search into a Worker — and adding
+    // quiescence, which makes it do more work — doesn't make the AI feel
+    // slower than it did before.
     const delayRange: Record<Difficulty, [number, number]> = {
       amateur: [800, 1200],
       debutant: [1600, 2400],
@@ -60,24 +82,34 @@ export const useChessGame = (
     const [min, max] = delayRange[difficulty] ?? [2000, 3000];
     const delay = min + Math.random() * (max - min);
 
-    setTimeout(() => {
-      const chosen = getBestMove(game, difficulty);
-      if (!chosen) return;
+    Promise.all([sleep(delay), getMoveAsync(game.fen(), difficulty)])
+      .then(([, chosen]) => {
+        // The player may have started a new game while this was computing —
+        // if so, this result belongs to a board that no longer exists.
+        if (generationRef.current !== myGeneration) return;
+        thinkingForGenerationRef.current = null;
+        if (!chosen) return;
 
-      const result = game.move(chosen);
-      if (result) {
-        const { gameStatus, winner } = updateGameStatus();
-        setFen(game.fen());
-        setState(prev => ({
-          ...prev,
-          isAiThinking: false,
-          moveHistory: [...prev.moveHistory, result],
-          gameStatus,
-          winner,
-        }));
-      }
-    }, delay);
-  }, [updateGameStatus, difficulty]);
+        const result = game.move({ from: chosen.from, to: chosen.to, promotion: chosen.promotion });
+        if (result) {
+          const { gameStatus, winner } = updateGameStatus();
+          triggerFeedback(classifyMoveSound(result, game.isCheck(), gameStatus, winner, playerColor));
+          setFen(game.fen());
+          setState(prev => ({
+            ...prev,
+            isAiThinking: false,
+            moveHistory: [...prev.moveHistory, result],
+            gameStatus,
+            winner,
+          }));
+        }
+      })
+      .catch(() => {
+        if (generationRef.current !== myGeneration) return;
+        thinkingForGenerationRef.current = null;
+        setState(prev => ({ ...prev, isAiThinking: false }));
+      });
+  }, [updateGameStatus, difficulty, getMoveAsync, playerColor, triggerFeedback]);
 
   // If AI plays first (player is black), trigger AI on mount
   const hasInitialMove = useRef(false);
@@ -107,6 +139,7 @@ export const useChessGame = (
         const move = game.move({ from: state.selectedSquare, to: square, promotion: 'q' });
         if (move) {
           const { gameStatus, winner } = updateGameStatus();
+          triggerFeedback(classifyMoveSound(move, game.isCheck(), gameStatus, winner, playerColor));
           setFen(game.fen());
           setState(prev => ({
             ...prev,
@@ -121,6 +154,7 @@ export const useChessGame = (
         }
       } catch {
         // Invalid move, deselect
+        triggerFeedback('illegal');
         setState(prev => ({ ...prev, selectedSquare: null, validMoves: [] }));
         return;
       }
@@ -132,11 +166,12 @@ export const useChessGame = (
     } else {
       setState(prev => ({ ...prev, selectedSquare: null, validMoves: [] }));
     }
-  }, [state.selectedSquare, state.gameStatus, state.isAiThinking, vsAi, playerColor, makeAiMove, updateGameStatus]);
+  }, [state.selectedSquare, state.gameStatus, state.isAiThinking, vsAi, playerColor, makeAiMove, updateGameStatus, triggerFeedback]);
 
   const undoMove = useCallback(() => {
     const game = gameRef.current;
     if (state.moveHistory.length === 0 || state.isAiThinking) return;
+    triggerFeedback('undo');
 
     // Undo opponent's move + player's move (2 moves)
     if (vsAi && state.moveHistory.length >= 2) {
@@ -163,9 +198,10 @@ export const useChessGame = (
         winner: null,
       }));
     }
-  }, [state.moveHistory, state.isAiThinking, vsAi]);
+  }, [state.moveHistory, state.isAiThinking, vsAi, triggerFeedback]);
 
   const resetGame = useCallback(() => {
+    generationRef.current += 1; // invalidate any AI computation still in flight
     gameRef.current = new Chess();
     hasInitialMove.current = false;
     setFen(gameRef.current.fen());
@@ -184,15 +220,17 @@ export const useChessGame = (
   const currentTurn = useCallback(() => gameRef.current.turn(), []);
 
   const forceEnd = useCallback((loser: 'w' | 'b') => {
+    const winner = loser === 'w' ? 'b' : 'w';
+    triggerFeedback(winner === playerColor ? 'checkmateWin' : 'checkmateLoss');
     setState(prev => ({
       ...prev,
       gameStatus: 'checkmate',
-      winner: loser === 'w' ? 'b' : 'w',
+      winner,
       isAiThinking: false,
       selectedSquare: null,
       validMoves: [],
     }));
-  }, []);
+  }, [playerColor, triggerFeedback]);
 
   return {
     fen,

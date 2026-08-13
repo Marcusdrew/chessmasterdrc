@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface GameEndModalProps {
   gameStatus: 'playing' | 'checkmate' | 'draw' | 'stalemate';
@@ -13,22 +14,23 @@ interface GameEndModalProps {
 }
 
 const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerColor, onRematch, onMenu, eloChange, newElo, onReview }) => {
+  const { t } = useTranslation();
   if (gameStatus === 'playing') return null;
 
   const isVictory = winner === playerColor;
   const title = gameStatus === 'checkmate'
-    ? isVictory ? '🏆 Victoire !' : '💀 Défaite'
+    ? isVictory ? `🏆 ${t('gameEnd.victory')}` : `💀 ${t('gameEnd.defeat')}`
     : gameStatus === 'draw'
-      ? '🤝 Partie nulle'
-      : '🤝 Pat';
+      ? `🤝 ${t('gameEnd.draw')}`
+      : `🤝 ${t('gameEnd.stalemate')}`;
 
   const subtitle = gameStatus === 'checkmate'
     ? isVictory
-      ? 'Échec et mat ! Vous avez gagné la partie.'
-      : 'Échec et mat. L\'adversaire a gagné.'
+      ? t('gameEnd.victorySubtitle')
+      : t('gameEnd.defeatSubtitle')
     : gameStatus === 'draw'
-      ? 'La partie se termine par une égalité. Aucun joueur ne peut gagner.'
-      : 'Pat ! Votre adversaire n\'a plus de coups légaux mais n\'est pas en échec. C\'est une égalité.';
+      ? t('gameEnd.drawSubtitle')
+      : t('gameEnd.stalemateSubtitle');
 
   return (
     <AnimatePresence>
@@ -67,20 +69,20 @@ const GameEndModal: React.FC<GameEndModalProps> = ({ gameStatus, winner, playerC
                 onClick={onReview}
                 className="w-full py-2.5 rounded-lg bg-accent text-accent-foreground font-body font-medium text-sm hover:opacity-90 transition-opacity"
               >
-                📊 Voir l'analyse de la partie
+                📊 {t('gameEnd.viewAnalysis')}
               </button>
             )}
             <button
               onClick={onRematch}
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-body font-medium text-sm hover:bg-primary/90 transition-colors"
             >
-              Rejouer
+              {t('gameEnd.rematch')}
             </button>
             <button
               onClick={onMenu}
               className="w-full py-2.5 rounded-lg border border-border text-muted-foreground font-body text-sm hover:text-foreground transition-colors"
             >
-              Menu principal
+              {t('gameEnd.mainMenu')}
             </button>
           </div>
         </motion.div>

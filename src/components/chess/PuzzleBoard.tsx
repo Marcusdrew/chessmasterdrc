@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getPieceSymbol } from '@/lib/chessPieces';
+import { useSensations } from '@/hooks/useSensations';
 
 interface PuzzleBoardProps {
   fen: string;
@@ -33,6 +35,8 @@ function coordsToSquare(r: number, c: number): string {
 }
 
 const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
+  const { t } = useTranslation();
+  const { triggerFeedback } = useSensations();
   const [board, setBoard] = useState(() => fenToBoard(fen));
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [solvedSteps, setSolvedSteps] = useState(0);
@@ -61,14 +65,17 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
         if (solvedSteps + 1 >= solution.length) {
           setStatus('correct');
           setSolvedSteps(solvedSteps + 1);
+          triggerFeedback('puzzleSolved');
         } else {
           setSolvedSteps(solvedSteps + 1);
+          triggerFeedback('move');
         }
       } else if (piece && piece.color === turn) {
         setSelectedSquare(sq);
       } else {
         setStatus('wrong');
         setSelectedSquare(null);
+        triggerFeedback('puzzleWrong');
         setTimeout(() => setStatus('playing'), 1500);
       }
     } else {
@@ -76,7 +83,7 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
         setSelectedSquare(sq);
       }
     }
-  }, [board, selectedSquare, solution, solvedSteps, status, turn]);
+  }, [board, selectedSquare, solution, solvedSteps, status, turn, triggerFeedback]);
 
   const resetPuzzle = () => {
     setBoard(fenToBoard(fen));
@@ -131,17 +138,17 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
       {/* Status */}
       {status === 'correct' && (
         <div className="text-sm font-body font-medium text-chess-valid flex items-center gap-1">
-          ✓ Bravo ! Puzzle résolu !
+          ✓ {t('puzzleBoard.solved')}
         </div>
       )}
       {status === 'wrong' && (
         <div className="text-sm font-body font-medium text-destructive flex items-center gap-1">
-          ✗ Mauvais coup, réessayez !
+          ✗ {t('puzzleBoard.wrongMove')}
         </div>
       )}
       {status === 'playing' && (
         <p className="text-xs font-body text-muted-foreground">
-          Trait aux {turn === 'w' ? 'blancs' : 'noirs'} — Trouvez le meilleur coup !
+          {t('puzzleBoard.turnPrompt', { color: turn === 'w' ? t('moveHistory.white') : t('moveHistory.black') })}
         </p>
       )}
 
@@ -152,14 +159,14 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
             onClick={() => setShowHint(true)}
             className="px-3 py-1 text-xs font-body rounded border border-border text-accent hover:bg-accent/10 transition-colors"
           >
-            💡 Indice
+            💡 {t('puzzleBoard.hintButton')}
           </button>
         )}
         <button
           onClick={resetPuzzle}
           className="px-3 py-1 text-xs font-body rounded border border-border text-muted-foreground hover:text-foreground transition-colors"
         >
-          ↩ Recommencer
+          ↩ {t('puzzleBoard.restart')}
         </button>
       </div>
 
@@ -171,7 +178,7 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
 
       {status === 'correct' && (
         <p className="text-xs font-body text-muted-foreground">
-          Solution : {solution.map(s => `${s.from} → ${s.to}`).join(', ')}
+          {t('puzzleBoard.solution')} {solution.map(s => `${s.from} → ${s.to}`).join(', ')}
         </p>
       )}
     </div>

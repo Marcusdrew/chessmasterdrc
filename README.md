@@ -29,7 +29,7 @@ ChessMaster est une application d'échecs en français conçue pour apprendre, s
 
 ### Avec Lovable
 
-Visitez votre projet sur [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) et commencez à prompt. Les modifications sont automatiquement commitées dans ce dépôt.
+Visitez votre projet sur [Lovable](https://lovable.dev/projects/f6d9c263-5521-4054-b79a-516781cd69a6) et commencez à prompt. Les modifications sont automatiquement commitées dans ce dépôt.
 
 ### Dans votre IDE préféré
 
@@ -63,7 +63,7 @@ npm run dev
 
 ## Déploiement
 
-Ouvrez [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID), puis cliquez sur **Share → Publish** pour publier l'application.
+Ouvrez [Lovable](https://lovable.dev/projects/f6d9c263-5521-4054-b79a-516781cd69a6), puis cliquez sur **Share → Publish** pour publier l'application.
 
 ## Domaine personnalisé
 

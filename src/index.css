@@ -54,6 +54,14 @@
     --chess-white-piece: 30 10% 15%;
     --chess-black-piece: 20 10% 12%;
 
+    /* Revolutionary-mode tokens: energy (electric blue), power (violet),
+       trap (burnt orange) — deliberately outside the warm board palette so
+       these read instantly as "special" rather than blending into the
+       chess-check red or chess-selected gold already in use. */
+    --rev-energy: 195 75% 50%;
+    --rev-power: 265 60% 60%;
+    --rev-trap: 15 75% 50%;
+
     --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
   }
@@ -80,6 +88,9 @@
     --chess-dark: 25 20% 38%;
     --chess-white-piece: 30 15% 92%;
     --chess-black-piece: 20 10% 20%;
+    --rev-energy: 195 80% 60%;
+    --rev-power: 265 65% 68%;
+    --rev-trap: 15 80% 58%;
   }
 }
 

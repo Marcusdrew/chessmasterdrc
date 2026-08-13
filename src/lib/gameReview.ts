@@ -1,6 +1,12 @@
 import { Chess, Move } from 'chess.js';
 import { evaluatePosition, getBestMove } from './chessAI';
 
+// NOTE: this module must stay free of any i18n / DOM / localStorage
+// dependency — it runs inside the chess AI Web Worker (see
+// src/workers/chessAI.worker.ts), which has no access to those. Quality
+// labels are translated in the component that renders them instead, via
+// react-i18next's t('moveQuality.<key>').
+
 export type MoveQuality =
   | 'best'        // Meilleur coup
   | 'excellent'   // Excellent
@@ -28,17 +34,6 @@ export interface GameReviewSummary {
   counts: Record<MoveQuality, number>;
   accuracy: number; // 0-100
 }
-
-const QUALITY_LABELS: Record<MoveQuality, string> = {
-  best: 'Meilleur coup',
-  excellent: 'Excellent',
-  good: 'Bon',
-  inaccuracy: 'Imprécision',
-  mistake: 'Erreur',
-  blunder: 'Gaffe',
-};
-
-export const qualityLabel = (q: MoveQuality) => QUALITY_LABELS[q];
 
 const QUALITY_COLOR: Record<MoveQuality, string> = {
   best: 'text-emerald-500',

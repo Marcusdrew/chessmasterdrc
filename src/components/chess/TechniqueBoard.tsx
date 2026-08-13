@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getPieceSymbol } from '@/lib/chessPieces';
 
 interface TechniqueBoardProps {
@@ -22,6 +23,7 @@ function fenToBoard(fen: string): ({ type: string; color: string } | null)[][] {
 }
 
 const TechniqueBoard: React.FC<TechniqueBoardProps> = ({ steps }) => {
+  const { t } = useTranslation();
   const [stepIndex, setStepIndex] = useState(0);
   const current = steps[stepIndex];
   const board = fenToBoard(current.fen);
@@ -79,7 +81,7 @@ const TechniqueBoard: React.FC<TechniqueBoardProps> = ({ steps }) => {
             disabled={stepIndex === 0}
             className="px-2 py-1 text-xs font-body rounded border border-border text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
           >
-            ◀ Préc.
+            ◀ {t('techniqueBoard.prev')}
           </button>
           <span className="text-xs font-body text-muted-foreground">
             {stepIndex + 1} / {steps.length}
@@ -89,7 +91,7 @@ const TechniqueBoard: React.FC<TechniqueBoardProps> = ({ steps }) => {
             disabled={stepIndex === steps.length - 1}
             className="px-2 py-1 text-xs font-body rounded border border-border text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
           >
-            Suiv. ▶
+            {t('techniqueBoard.next')} ▶
           </button>
         </div>
       )}

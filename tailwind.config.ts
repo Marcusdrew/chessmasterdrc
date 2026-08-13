@@ -60,6 +60,11 @@ export default {
           "white-piece": "hsl(var(--chess-white-piece))",
           "black-piece": "hsl(var(--chess-black-piece))",
         },
+        rev: {
+          energy: "hsl(var(--rev-energy))",
+          power: "hsl(var(--rev-power))",
+          trap: "hsl(var(--rev-trap))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

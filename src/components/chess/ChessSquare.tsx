@@ -12,8 +12,26 @@ interface ChessSquareProps {
   isCheck: boolean;
   isHintFrom?: boolean;
   isHintTo?: boolean;
+  /** Revolutionary mode only — all optional, no-op when omitted so classic
+   * mode's rendering is completely unaffected. */
+  specialType?: 'energy' | 'power' | 'trap';
+  isFrozen?: boolean;
+  isShielded?: boolean;
+  isTargetable?: boolean;
   onClick: (square: Square) => void;
 }
+
+const SPECIAL_ICON: Record<'energy' | 'power' | 'trap', string> = {
+  energy: '⚡',
+  power: '✨',
+  trap: '⚠',
+};
+
+const SPECIAL_BG: Record<'energy' | 'power' | 'trap', string> = {
+  energy: 'bg-rev-energy/15',
+  power: 'bg-rev-power/15',
+  trap: 'bg-rev-trap/15',
+};
 
 const getSquareName = (row: number, col: number): Square => {
   const files = 'abcdefgh';
@@ -21,7 +39,8 @@ const getSquareName = (row: number, col: number): Square => {
 };
 
 const ChessSquare: React.FC<ChessSquareProps> = ({
-  row, col, piece, isSelected, isValidMove, isCheck, isHintFrom, isHintTo, onClick,
+  row, col, piece, isSelected, isValidMove, isCheck, isHintFrom, isHintTo,
+  specialType, isFrozen, isShielded, isTargetable, onClick,
 }) => {
   const square = getSquareName(row, col);
   const isLight = (row + col) % 2 === 0;
@@ -32,15 +51,25 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
       className={`
         relative flex items-center justify-center cursor-pointer select-none transition-colors duration-150
         ${isLight ? 'bg-chess-light' : 'bg-chess-dark'}
+        ${specialType ? SPECIAL_BG[specialType] : ''}
         ${isSelected ? 'ring-2 ring-chess-selected ring-inset' : ''}
         ${isCheck ? 'ring-2 ring-chess-check ring-inset bg-chess-check/20' : ''}
         ${isHintFrom ? 'ring-4 ring-amber-400 ring-inset !bg-amber-300/60' : ''}
         ${isHintTo ? 'ring-4 ring-emerald-500 ring-inset !bg-emerald-300/50' : ''}
+        ${isTargetable ? 'ring-2 ring-rev-power ring-inset animate-pulse' : ''}
         hover:brightness-110
       `}
       onClick={() => onClick(square)}
       whileTap={{ scale: 0.95 }}
     >
+      {/* Special square marker — small and corner-anchored so it never
+          competes with the piece glyph for attention */}
+      {specialType && (
+        <span className="absolute top-0.5 left-0.5 text-[10px] leading-none opacity-70 pointer-events-none">
+          {SPECIAL_ICON[specialType]}
+        </span>
+      )}
+
       {/* Hint pulse overlay */}
       {(isHintFrom || isHintTo) && (
         <motion.div
@@ -73,12 +102,20 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
         <motion.span
           className={`text-3xl md:text-4xl leading-none ${
             piece?.color === 'w' ? 'text-chess-white-piece' : 'text-chess-black-piece'
-          } ${isSelected ? 'scale-110' : ''}`}
+          } ${isSelected ? 'scale-110' : ''} ${isFrozen ? 'opacity-50' : ''}`}
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
           {symbol}
         </motion.span>
+      )}
+
+      {/* Frozen / shielded overlay badges */}
+      {isFrozen && (
+        <span className="absolute bottom-0 right-0.5 text-xs leading-none pointer-events-none" title="Frozen">❄️</span>
+      )}
+      {isShielded && (
+        <span className="absolute bottom-0 right-0.5 text-xs leading-none pointer-events-none" title="Shielded">🛡️</span>
       )}
 
     </motion.div>

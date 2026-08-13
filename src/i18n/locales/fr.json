@@ -1,0 +1,534 @@
+{
+  "common": {
+    "menu": "Menu",
+    "close": "Fermer"
+  },
+  "menu": {
+    "tagline": "Stratégie • Intelligence • Maîtrise",
+    "play": "Jouer",
+    "techniques": "Techniques",
+    "learn": "Apprendre",
+    "poweredBy": "Propulsé par l'Intelligence Artificielle",
+    "soundToggle": "Son",
+    "vibrationToggle": "Vibrations"
+  },
+  "playConfig": {
+    "title": "Configuration",
+    "chooseColor": "Choisissez votre couleur",
+    "white": "Blancs",
+    "black": "Noirs",
+    "difficulty": "Difficulté",
+    "difficulties": {
+      "amateur": "Amateur",
+      "debutant": "Débutant",
+      "intermediaire": "Intermédiaire",
+      "avance": "Avancé",
+      "expert": "Expert"
+    },
+    "time": "Temps",
+    "unlimited": "Illimité",
+    "playButton": "Jouer",
+    "backToMenu": "Retour au menu",
+    "mode": "Mode de jeu",
+    "modeClassic": "Classique",
+    "modeRevolutionary": "Révolutionnaire",
+    "modeRevolutionaryHint": "Énergie, pouvoirs et cases spéciales — l'IA joue aux échecs classiques, seuls vos pouvoirs changent la donne."
+  },
+  "game": {
+    "opponentThinking": "Adversaire réfléchit...",
+    "yourTurn": "Votre tour",
+    "opponentTurn": "Tour de l'adversaire",
+    "undo": "Annuler"
+  },
+  "aiCoach": {
+    "title": "Conseils IA",
+    "analyzing": "Analyse...",
+    "hint": "Indice",
+    "playToGetTips": "Jouez un coup pour recevoir des conseils",
+    "checkmate": "Échec et mat !",
+    "draw": "Partie nulle",
+    "stalemate": "Pat",
+    "pieceNames": {
+      "p": "pion",
+      "n": "cavalier",
+      "b": "fou",
+      "r": "tour",
+      "q": "dame",
+      "k": "roi"
+    },
+    "tips": {
+      "greatCapture": "Excellente capture ! Gain net de matériel.",
+      "badExchange": "Échange défavorable : votre {{piece}} ({{value}} pts) risque d'être repris après avoir capturé un {{captured}} ({{capturedValue}} pts).",
+      "equalExchange": "Échange de pièces de valeur égale.",
+      "captureDone": "Capture effectuée.",
+      "check": "Échec ! Gardez la pression et cherchez à gagner du tempo.",
+      "castling": "Le roque protège votre roi et active la tour. Très bon réflexe.",
+      "centerControl": "Bon contrôle du centre avec un pion. Le centre est la clé de l'ouverture.",
+      "minorDevelopment": "Bon développement de pièce mineure. Continuez à développer avant d'attaquer.",
+      "earlyQueen": "Sortir la dame trop tôt peut la rendre vulnérable aux attaques de tempo.",
+      "flankPawn": "Pousser les pions de flanc tôt peut affaiblir votre structure. Priorité au centre et au développement.",
+      "samePieceTwice": "Vous déplacez la même pièce deux fois en ouverture. Essayez de développer vos autres pièces d'abord.",
+      "kingMoved": "Déplacer le roi sans roquer peut être dangereux. Assurez-vous qu'il est en sécurité."
+    }
+  },
+  "hint": {
+    "bestMove": "Meilleur coup :"
+  },
+  "moveHistory": {
+    "title": "Historique des coups",
+    "white": "Blancs",
+    "black": "Noirs",
+    "noMoves": "Aucun coup joué"
+  },
+  "gameEnd": {
+    "victory": "Victoire !",
+    "defeat": "Défaite",
+    "draw": "Partie nulle",
+    "stalemate": "Pat",
+    "victorySubtitle": "Échec et mat ! Vous avez gagné la partie.",
+    "defeatSubtitle": "Échec et mat. L'adversaire a gagné.",
+    "drawSubtitle": "La partie se termine par une égalité. Aucun joueur ne peut gagner.",
+    "stalemateSubtitle": "Pat ! Votre adversaire n'a plus de coups légaux mais n'est pas en échec. C'est une égalité.",
+    "viewAnalysis": "Voir l'analyse de la partie",
+    "rematch": "Rejouer",
+    "mainMenu": "Menu principal"
+  },
+  "gameReview": {
+    "title": "Analyse de la partie",
+    "analyzing": "Analyse de chaque coup en cours...",
+    "accuracy": "Précision",
+    "best": "Meilleur",
+    "noMoves": "Aucun coup à analyser."
+  },
+  "moveQuality": {
+    "best": "Meilleur coup",
+    "excellent": "Excellent",
+    "good": "Bon",
+    "inaccuracy": "Imprécision",
+    "mistake": "Erreur",
+    "blunder": "Gaffe"
+  },
+  "nav": {
+    "learn": "Apprendre",
+    "techniques": "Techniques"
+  },
+  "learnPage": {
+    "piecesTitle": "Les Pièces",
+    "piecesSubtitle": "Découvrez chaque pièce : déplacement, valeur, utilité et conseils d'expert.",
+    "value": "Valeur :",
+    "conceptsTitle": "Règles & Concepts",
+    "conceptsSubtitle": "Les règles essentielles et les notions à maîtriser pour bien jouer.",
+    "eloTitle": "Système de classement",
+    "eloSubtitle": "Comprenez comment votre score évolue après chaque partie.",
+    "movementLabel": "Déplacement",
+    "utilityLabel": "Utilité",
+    "tipsLabel": "Conseils",
+    "eloTeaser": "ΔELO = K × (Résultat − Espérance). Cliquez pour la formule complète.",
+    "priceless": "inestimable",
+    "pointsUnit": "points"
+  },
+  "techniquesPage": {
+    "tabTechniques": "Techniques",
+    "tabPuzzles": "Puzzles",
+    "all": "Toutes",
+    "dailyPuzzle": "Puzzle du jour",
+    "allPuzzlesHeading": "Tous les puzzles",
+    "dailyPuzzleCta": "→ Résolvez le défi quotidien",
+    "stepsHeading": "Étapes",
+    "category": {
+      "quickMate": "Mat rapide",
+      "openings": "Ouvertures",
+      "matPatterns": "Patterns de mat",
+      "tactics": "Tactiques",
+      "endgames": "Finales",
+      "strategy": "Stratégie"
+    },
+    "difficulty": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    }
+  },
+  "techniqueBoard": {
+    "prev": "Préc.",
+    "next": "Suiv."
+  },
+  "puzzleBoard": {
+    "solved": "Bravo ! Puzzle résolu !",
+    "wrongMove": "Mauvais coup, réessayez !",
+    "turnPrompt": "Trait aux {{color}} — Trouvez le meilleur coup !",
+    "hintButton": "Indice",
+    "restart": "Recommencer",
+    "solution": "Solution :"
+  },
+  "pieces": {
+    "pawn": {
+      "name": "Pion",
+      "movement": "Avance d'1 case (2 au premier coup). Capture en diagonale. Promeut en arrivant sur la dernière rangée.",
+      "utility": "Squelette de la position. Contrôle le centre, protège les pièces et peut devenir une dame.",
+      "tips": [
+        "Ne créez pas de pions doublés ou isolés sans raison.",
+        "Un pion passé en finale vaut souvent une victoire.",
+        "Au centre (e4, d4, e5, d5), le pion est le plus puissant."
+      ]
+    },
+    "knight": {
+      "name": "Cavalier",
+      "movement": "Se déplace en L (2+1 cases). Seule pièce qui saute par-dessus les autres.",
+      "utility": "Excellent dans les positions fermées. Crée des fourchettes redoutables.",
+      "tips": [
+        "Placez-le au centre (f3, c3, f6, c6) pour son rayonnement maximal.",
+        "Évitez le bord : « cavalier au bord, cavalier mort ».",
+        "Cherchez les fourchettes roi + dame ou roi + tour."
+      ]
+    },
+    "bishop": {
+      "name": "Fou",
+      "movement": "Se déplace en diagonale, sans limite de distance. Reste sur sa couleur de case.",
+      "utility": "Roi des positions ouvertes. La paire de fous est un avantage durable.",
+      "tips": [
+        "Conservez vos deux fous le plus longtemps possible.",
+        "Un fou actif sur une longue diagonale (fianchetto) est très puissant.",
+        "Évitez de bloquer vos fous derrière vos propres pions."
+      ]
+    },
+    "rook": {
+      "name": "Tour",
+      "movement": "Se déplace en ligne droite (rangées et colonnes), sans limite de distance.",
+      "utility": "Reine des colonnes ouvertes et de la 7ème rangée. Décisive en finale.",
+      "tips": [
+        "Doublez vos tours sur une colonne ouverte.",
+        "Une tour sur la 7ème rangée vaut souvent un pion.",
+        "Activez vos tours par le roque le plus tôt possible."
+      ]
+    },
+    "queen": {
+      "name": "Dame",
+      "movement": "Combine la tour et le fou : lignes, colonnes et diagonales sans limite.",
+      "utility": "La pièce la plus puissante. À utiliser pour attaquer, pas pour défendre seule.",
+      "tips": [
+        "Ne sortez pas la dame trop tôt — elle se fait chasser.",
+        "Coordonnez-la avec une autre pièce pour menacer le mat.",
+        "En finale, elle peut faire mat à elle seule avec le roi."
+      ]
+    },
+    "king": {
+      "name": "Roi",
+      "movement": "Se déplace d'1 case dans toutes les directions. Ne peut jamais être en échec après un coup.",
+      "utility": "À protéger en ouverture, pièce active en finale.",
+      "tips": [
+        "Roquez tôt pour mettre votre roi à l'abri.",
+        "En finale, centralisez le roi : c'est une pièce forte (≈ 4 points).",
+        "Méfiez-vous du mat du couloir : aérez vos pions du roque."
+      ]
+    }
+  },
+  "concepts": {
+    "checkCheckmateStalemate": {
+      "title": "Échec, mat et pat",
+      "body": "L'échec est une attaque sur le roi : on doit obligatoirement la parer. Le mat survient quand aucune parade n'existe — la partie est terminée. Le pat est une nulle : le joueur au trait n'a aucun coup légal mais n'est pas en échec."
+    },
+    "castling": {
+      "title": "Le roque",
+      "body": "Coup spécial qui déplace le roi de 2 cases vers une tour, et place la tour de l'autre côté. Conditions : ni le roi ni la tour n'ont bougé, aucune pièce entre eux, le roi n'est pas en échec et ne traverse pas une case attaquée."
+    },
+    "enPassant": {
+      "title": "La prise en passant",
+      "body": "Si un pion adverse avance de 2 cases et arrive à côté du vôtre, vous pouvez le capturer comme s'il n'avait avancé que d'1 case. À jouer immédiatement, sinon le droit est perdu."
+    },
+    "promotion": {
+      "title": "La promotion",
+      "body": "Un pion qui atteint la dernière rangée se transforme en dame, tour, fou ou cavalier (au choix). Souvent en dame, mais une sous-promotion en cavalier peut donner un mat surprise."
+    },
+    "gamePhases": {
+      "title": "Phases de la partie",
+      "body": "Ouverture (1-15) : développer ses pièces, contrôler le centre, mettre le roi à l'abri. Milieu de jeu : créer des plans tactiques et stratégiques. Finale : activer le roi et promouvoir un pion."
+    },
+    "pieceValues": {
+      "title": "Valeur des pièces",
+      "body": "Pion = 1, Cavalier = 3, Fou = 3, Tour = 5, Dame = 9, Roi = ∞. Ces valeurs guident vos échanges, mais l'activité d'une pièce compte autant que sa valeur théorique."
+    }
+  },
+  "eloExplained": {
+    "title": "Comment fonctionne votre ELO",
+    "body": "Le système ELO mesure votre niveau réel par rapport à vos adversaires. Vous démarrez à 1000.\n\nChaque IA a un score fixe :\n• {{amateurLabel}} : 400  • {{debutantLabel}} : 800  • {{intermediaireLabel}} : 1200  • {{avanceLabel}} : 1600  • {{expertLabel}} : 2000\n\nAprès chaque partie, votre ELO varie selon la formule :\nΔELO = K × (Résultat − Espérance)\n\n— K = 32 (facteur de volatilité)\n— Résultat : 1 (victoire), 0.5 (nulle), 0 (défaite)\n— Espérance : probabilité de gagner calculée d'après l'écart de niveau\n\nConcrètement : battre un adversaire bien plus fort rapporte beaucoup, perdre contre un plus faible coûte cher. Une partie sans coup joué ne change pas votre ELO."
+  },
+  "techniques": {
+    "scholar-mate": {
+      "title": "Mat du Berger",
+      "description": "Le mat le plus rapide possible en 4 coups. Idéal pour surprendre un adversaire inexpérimenté.",
+      "steps": [
+        "1. e2 → e4 , e7 → e5",
+        "2. f1 → c4 (vise f7) , b8 → c6",
+        "3. d1 → h5 (double menace) , g8 → f6?? (mauvaise défense)",
+        "4. h5 × f7# Échec et mat !"
+      ],
+      "boardStepLabels": [
+        "Position de départ",
+        "1. e2 → e4",
+        "1... e7 → e5",
+        "2. f1 → c4 (vise f7)",
+        "2... b8 → c6 (défense naturelle)",
+        "3. d1 → h5 (double menace !)",
+        "3... g8 → f6?? (mauvaise défense)",
+        "4. h5 × f7# Échec et mat !"
+      ]
+    },
+    "italian-opening": {
+      "title": "Ouverture Italienne",
+      "description": "Une des ouvertures les plus classiques. Contrôle du centre et développement rapide des pièces.",
+      "steps": [
+        "1. e2 → e4 , e7 → e5",
+        "2. g1 → f3 (attaque e5) , b8 → c6 (défend)",
+        "3. f1 → c4 (Italienne) , f8 → c5 (Giuoco Piano)",
+        "4. O-O — Roi en sécurité"
+      ],
+      "boardStepLabels": [
+        "Position de départ",
+        "1. e2 → e4",
+        "1... e7 → e5",
+        "2. g1 → f3 (attaque e5)",
+        "2... b8 → c6 (défend e5)",
+        "3. f1 → c4 (Italienne !)",
+        "3... f8 → c5 (Giuoco Piano)",
+        "4. O-O — Roi en sécurité, tour activée"
+      ]
+    },
+    "sicilian-defense": {
+      "title": "Défense Sicilienne",
+      "description": "La réponse la plus populaire à 1.e4. Crée un jeu asymétrique et combatif.",
+      "steps": [
+        "1. e2 → e4 , c7 → c5 (la Sicilienne)",
+        "2. g1 → f3 , d7 → d6",
+        "3. d2 → d4 , c5 × d4",
+        "4. f3 × d4 (cavalier au centre) , g8 → f6"
+      ],
+      "boardStepLabels": [
+        "Position de départ",
+        "1. e2 → e4",
+        "1... c7 → c5 (Sicilienne)",
+        "2. g1 → f3",
+        "2... d7 → d6 (vers la Najdorf)",
+        "3. d2 → d4 (ouvre le centre)",
+        "3... c5 × d4",
+        "4. f3 × d4 (cavalier au centre)",
+        "4... g8 → f6 (attaque e4)"
+      ]
+    },
+    "back-rank": {
+      "title": "Mat du couloir",
+      "description": "Exploiter un roi coincé sur la première rangée sans case de fuite.",
+      "steps": [
+        "Identifier le roi sans case de fuite",
+        "Les pions bloquent les sorties (f7, g7, h7)",
+        "Attaquer la rangée arrière avec une tour/dame",
+        "Mat sur la 8ème rangée"
+      ],
+      "boardStepLabels": [
+        "Le roi noir est piégé par f7, g7, h7",
+        "a1 → a8# — Mat du couloir !"
+      ]
+    },
+    "fork": {
+      "title": "La Fourchette",
+      "description": "Attaquer deux pièces en même temps avec une seule pièce.",
+      "steps": [
+        "Repérer deux pièces adverses mal placées",
+        "Déplacer un cavalier pour attaquer les deux",
+        "L'adversaire ne peut sauver qu'une pièce",
+        "Capturer la pièce abandonnée"
+      ],
+      "boardStepLabels": [
+        "Cavalier prêt à bondir : roi et tour exposés",
+        "f3 → d4 : fourchette roi + tour !"
+      ]
+    },
+    "pin": {
+      "title": "Le Clouage",
+      "description": "Immobiliser une pièce adverse car son déplacement exposerait une pièce plus importante.",
+      "steps": [
+        "Aligner votre pièce longue portée avec une pièce adverse",
+        "Derrière elle : une pièce plus importante (roi/dame)",
+        "La pièce clouée ne peut plus bouger",
+        "Capturer gratuitement"
+      ],
+      "boardStepLabels": [
+        "Le fou aligne dame et roi sur la diagonale",
+        "b3 × d5 : la dame était clouée — capture gratuite !"
+      ]
+    },
+    "discovered-attack": {
+      "title": "Attaque à la découverte",
+      "description": "Déplacer une pièce pour révéler une attaque d'une autre pièce cachée derrière.",
+      "steps": [
+        "Identifier une ligne d'attaque bloquée par votre pièce",
+        "Déplacer la pièce bloquante vers une menace",
+        "L'attaque découverte crée une double menace",
+        "L'adversaire ne peut pas tout défendre"
+      ],
+      "boardStepLabels": [
+        "Position typique d'une découverte",
+        "f3 × e5 : découvre l'attaque du fou sur f7 !"
+      ]
+    },
+    "endgame-kp": {
+      "title": "Finale Roi + Pion",
+      "description": "Maîtriser la technique pour promouvoir un pion avec l'aide du roi.",
+      "steps": [
+        "Avancez votre roi devant le pion",
+        "Concept de l'opposition : face à face",
+        "Le roi protège l'avancée du pion",
+        "Promotion en dame"
+      ],
+      "boardStepLabels": [
+        "Roi blanc devant le pion — clé de la finale",
+        "Roi avance : prend l'opposition",
+        "Le roi escorte, le pion va promouvoir"
+      ]
+    },
+    "castling-strategy": {
+      "title": "Stratégie du Roque",
+      "description": "Quand et comment roquer pour protéger votre roi et activer votre tour.",
+      "steps": [
+        "Développez cavalier et fou d'abord",
+        "Ne déplacez pas roi/tours inutilement",
+        "Petit roque (O-O) : sécurité classique",
+        "Grand roque (O-O-O) : attaque sur l'aile roi"
+      ],
+      "boardStepLabels": [
+        "Cavalier sorti — préparez le développement",
+        "Fou développé — prêt pour le petit roque",
+        "O-O : roi en sécurité, tour activée !"
+      ]
+    },
+    "smothered-mate": {
+      "title": "Mat étouffé",
+      "description": "Un mat élégant où le cavalier donne mat car le roi est entouré de ses propres pièces.",
+      "steps": [
+        "Le roi adverse est dans un coin",
+        "Ses propres pièces l'entourent",
+        "Le cavalier saute en f7/h7",
+        "Mat imparable"
+      ],
+      "boardStepLabels": [
+        "Cavalier en f7 : mat étouffé ! Roi piégé par sa tour et ses pions."
+      ]
+    }
+  },
+  "puzzles": {
+    "puzzle-1": {
+      "title": "Mat du couloir",
+      "description": "Trouvez le coup qui fait échec et mat.",
+      "hint": "La rangée arrière est faible..."
+    },
+    "puzzle-2": {
+      "title": "Fourchette de cavalier",
+      "description": "Placez votre cavalier pour attaquer roi et tour.",
+      "hint": "Une case qui menace deux pièces à la fois."
+    },
+    "puzzle-3": {
+      "title": "Mat du berger",
+      "description": "Trouvez le coup de mat final avec la dame.",
+      "hint": "La case f7 n'est défendue que par le roi..."
+    },
+    "puzzle-4": {
+      "title": "Mat de la dame",
+      "description": "Donnez mat en un coup avec votre dame.",
+      "hint": "Visez la dernière rangée — le roi est enfermé."
+    },
+    "puzzle-5": {
+      "title": "Mat avec la tour",
+      "description": "Donnez le mat du couloir avec la tour.",
+      "hint": "Le roi noir est piégé par ses propres pions."
+    },
+    "puzzle-6": {
+      "title": "Mat étouffé",
+      "description": "Le cavalier livre un mat élégant que rien ne peut bloquer.",
+      "hint": "Le cavalier saute là où aucune pièce ne peut s'interposer."
+    },
+    "puzzle-7": {
+      "title": "Embrochage royal",
+      "description": "Capturez la dame en alignant votre tour avec le roi.",
+      "hint": "Mettez le roi en échec — il devra bouger et abandonner sa dame."
+    },
+    "puzzle-8": {
+      "title": "Clouage gagnant",
+      "description": "Profitez du clouage pour capturer la dame gratuitement.",
+      "hint": "La dame ne peut pas bouger — son roi est juste derrière."
+    },
+    "puzzle-9": {
+      "title": "Promotion décisive",
+      "description": "Promouvez votre pion pour transformer la finale.",
+      "hint": "Une nouvelle dame change tout."
+    },
+    "puzzle-10": {
+      "title": "Double attaque de la dame",
+      "description": "Trouvez le coup qui attaque le roi et la tour simultanément.",
+      "hint": "Une diagonale qui frappe deux cibles à la fois."
+    },
+    "puzzle-11": {
+      "title": "Sacrifice et mat",
+      "description": "Sacrifiez votre dame pour un mat imparable.",
+      "hint": "Regardez les cases autour du roi noir..."
+    },
+    "puzzle-12": {
+      "title": "Double attaque du fou",
+      "description": "Trouvez le coup qui crée une double menace irrésistible.",
+      "hint": "Le fou peut viser deux cibles en même temps."
+    }
+  },
+  "revolutionary": {
+    "energyLabel": "Énergie",
+    "powers": {
+      "shield": {
+        "name": "Bouclier",
+        "description": "Protège une de vos pièces contre toute capture le temps du prochain coup adverse."
+      },
+      "freeze": {
+        "name": "Gel",
+        "description": "Empêche une pièce adverse de bouger lors de son prochain tour."
+      },
+      "evolve": {
+        "name": "Évolution",
+        "description": "Transforme un de vos pions en cavalier, sur place."
+      },
+      "elan": {
+        "name": "Élan",
+        "description": "Joue un coup supplémentaire immédiatement après celui-ci."
+      }
+    },
+    "cost": "Coût",
+    "usesLeft": "{{count}} restant(s)",
+    "noEnergy": "Énergie insuffisante",
+    "noUsesLeft": "Épuisé",
+    "targetOwnPiece": "Choisissez une de vos pièces",
+    "targetEnemyPiece": "Choisissez une pièce adverse",
+    "targetOwnPawn": "Choisissez un de vos pions",
+    "cancel": "Annuler",
+    "elanBonusMove": "Élan ! Rejouez immédiatement.",
+    "log": {
+      "energyGained": "{{piece}} en {{square}} : +{{amount}} énergie",
+      "powerCharged": "{{square}} : charge {{power}} gratuite !",
+      "trapTriggered": "Piège en {{square}} — gelé au prochain tour !",
+      "shieldActivated": "{{square}} protégée",
+      "freezeActivated": "{{square}} gelée",
+      "evolveActivated": "Pion en {{square}} transformé en cavalier",
+      "elanActivated": "Élan activé — un coup bonus arrive"
+    },
+    "pieceNames": {
+      "p": "Pion",
+      "n": "Cavalier",
+      "b": "Fou",
+      "r": "Tour",
+      "q": "Dame",
+      "k": "Roi"
+    },
+    "specialSquares": {
+      "energy": "Case d'énergie",
+      "power": "Case de pouvoir",
+      "trap": "Case piégée"
+    },
+    "log_heading": "Journal",
+    "noLog": "Rien pour le moment — développez vos pièces !"
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface HintDisplayProps {
   hint: { from: string; to: string } | null;
@@ -7,6 +8,7 @@ interface HintDisplayProps {
 }
 
 const HintDisplay: React.FC<HintDisplayProps> = ({ hint, onDismiss }) => {
+  const { t } = useTranslation();
   return (
     <AnimatePresence>
       {hint && (
@@ -18,7 +20,7 @@ const HintDisplay: React.FC<HintDisplayProps> = ({ hint, onDismiss }) => {
         >
           <span className="text-lg">💡</span>
           <span>
-            Meilleur coup : <strong>{hint.from} → {hint.to}</strong>
+            {t('hint.bestMove')} <strong>{hint.from} → {hint.to}</strong>
           </span>
           <button onClick={onDismiss} className="ml-2 opacity-70 hover:opacity-100">✕</button>
         </motion.div>

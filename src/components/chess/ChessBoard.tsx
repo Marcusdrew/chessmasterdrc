@@ -11,11 +11,17 @@ interface ChessBoardProps {
   currentTurn: string;
   playerColor: 'w' | 'b';
   hint?: { from: string; to: string } | null;
+  /** Revolutionary mode only — all optional. */
+  specialSquares?: { square: string; type: 'energy' | 'power' | 'trap' }[];
+  frozenSquares?: string[];
+  shieldedSquares?: string[];
+  targetableSquares?: string[];
   onSquareClick: (square: Square) => void;
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
-  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, hint, onSquareClick,
+  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, hint,
+  specialSquares, frozenSquares, shieldedSquares, targetableSquares, onSquareClick,
 }) => {
   const findKingSquare = (): string | null => {
     for (let r = 0; r < 8; r++) {
@@ -83,6 +89,10 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
                   isCheck={kingSquare === square}
                   isHintFrom={hint?.from === square}
                   isHintTo={hint?.to === square}
+                  specialType={specialSquares?.find(s => s.square === square)?.type}
+                  isFrozen={frozenSquares?.includes(square)}
+                  isShielded={shieldedSquares?.includes(square)}
+                  isTargetable={targetableSquares?.includes(square)}
                   onClick={onSquareClick}
                 />
               );

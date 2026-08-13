@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { Move } from 'chess.js';
+import { useChessAIWorker } from '@/hooks/useChessAIWorker';
 import {
-  analyzeGame,
-  qualityLabel,
   qualityColor,
   qualityIcon,
   type GameReviewSummary,
@@ -20,21 +20,28 @@ interface GameReviewProps {
 const QUALITY_ORDER: MoveQuality[] = ['best', 'excellent', 'good', 'inaccuracy', 'mistake', 'blunder'];
 
 const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, playerColor }) => {
+  const { t } = useTranslation();
+  const { analyzeGameAsync } = useChessAIWorker();
   const [summary, setSummary] = useState<GameReviewSummary | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    let cancelled = false;
     setLoading(true);
     setSummary(null);
-    // Defer to next tick so the UI can show the loader
-    const t = setTimeout(() => {
-      const s = analyzeGame(moveHistory, playerColor, 2);
-      setSummary(s);
-      setLoading(false);
+    // Small defer so the UI can paint the loader before analysis starts —
+    // matters most if the Worker is unavailable and analysis falls back to
+    // running on the main thread.
+    const timer = setTimeout(() => {
+      analyzeGameAsync(moveHistory, playerColor, 2).then(s => {
+        if (cancelled) return;
+        setSummary(s);
+        setLoading(false);
+      });
     }, 50);
-    return () => clearTimeout(t);
-  }, [open, moveHistory, playerColor]);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [open, moveHistory, playerColor, analyzeGameAsync]);
 
   if (!open) return null;
 
@@ -53,7 +60,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
           transition={{ type: 'spring', stiffness: 280, damping: 26 }}
         >
           <header className="flex items-center justify-between px-5 py-4 border-b border-border">
-            <h2 className="text-xl font-display font-bold text-foreground">Analyse de la partie</h2>
+            <h2 className="text-xl font-display font-bold text-foreground">{t('gameReview.title')}</h2>
             <button
               onClick={onClose}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -66,7 +73,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
             {loading && (
               <div className="flex flex-col items-center justify-center py-12">
                 <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-3" />
-                <p className="text-sm font-body text-muted-foreground">Analyse de chaque coup en cours...</p>
+                <p className="text-sm font-body text-muted-foreground">{t('gameReview.analyzing')}</p>
               </div>
             )}
 
@@ -75,7 +82,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                 {/* Accuracy + counts */}
                 <div className="mb-5 flex items-center justify-between p-4 rounded-lg bg-secondary border border-border">
                   <div>
-                    <p className="text-xs font-body text-muted-foreground uppercase tracking-wider">Précision</p>
+                    <p className="text-xs font-body text-muted-foreground uppercase tracking-wider">{t('gameReview.accuracy')}</p>
                     <p className="text-3xl font-display font-bold text-foreground">{summary.accuracy}%</p>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center">
@@ -85,7 +92,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                           {summary.counts[q]}
                         </p>
                         <p className="text-[10px] font-body text-muted-foreground leading-tight">
-                          {qualityLabel(q)}
+                          {t(`moveQuality.${q}`)}
                         </p>
                       </div>
                     ))}
@@ -113,7 +120,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                           </span>
                         </div>
                         <p className={`text-xs font-body ${qualityColor(m.quality)}`}>
-                          {qualityLabel(m.quality)}
+                          {t(`moveQuality.${m.quality}`)}
                           {m.centipawnLoss > 0 && m.quality !== 'best' && (
                             <span className="text-muted-foreground ml-2">
                               −{(m.centipawnLoss / 100).toFixed(2)}
@@ -123,7 +130,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                       </div>
                       {m.bestMove && m.quality !== 'best' && (
                         <div className="text-right">
-                          <p className="text-[10px] font-body text-muted-foreground uppercase">Meilleur</p>
+                          <p className="text-[10px] font-body text-muted-foreground uppercase">{t('gameReview.best')}</p>
                           <p className="font-mono text-xs text-emerald-500" translate="no">
                             {m.bestMove.from} → {m.bestMove.to}
                           </p>
@@ -134,7 +141,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
 
                   {summary.moves.length === 0 && (
                     <p className="text-center text-sm text-muted-foreground py-8">
-                      Aucun coup à analyser.
+                      {t('gameReview.noMoves')}
                     </p>
                   )}
                 </div>
@@ -147,7 +154,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
               onClick={onClose}
               className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-body font-medium text-sm hover:opacity-90 transition-opacity"
             >
-              Fermer
+              {t('common.close')}
             </button>
           </footer>
         </motion.div>

@@ -1,0 +1,534 @@
+{
+  "common": {
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "menu": {
+    "tagline": "Strategy • Intelligence • Mastery",
+    "play": "Play",
+    "techniques": "Techniques",
+    "learn": "Learn",
+    "poweredBy": "Powered by Artificial Intelligence",
+    "soundToggle": "Sound",
+    "vibrationToggle": "Vibration"
+  },
+  "playConfig": {
+    "title": "Setup",
+    "chooseColor": "Choose your color",
+    "white": "White",
+    "black": "Black",
+    "difficulty": "Difficulty",
+    "difficulties": {
+      "amateur": "Amateur",
+      "debutant": "Beginner",
+      "intermediaire": "Intermediate",
+      "avance": "Advanced",
+      "expert": "Expert"
+    },
+    "time": "Time",
+    "unlimited": "Unlimited",
+    "playButton": "Play",
+    "backToMenu": "Back to menu",
+    "mode": "Game mode",
+    "modeClassic": "Classic",
+    "modeRevolutionary": "Revolutionary",
+    "modeRevolutionaryHint": "Energy, powers and special squares — the AI plays classic chess, only your powers change the game."
+  },
+  "game": {
+    "opponentThinking": "Opponent is thinking...",
+    "yourTurn": "Your turn",
+    "opponentTurn": "Opponent's turn",
+    "undo": "Undo"
+  },
+  "aiCoach": {
+    "title": "AI Coach",
+    "analyzing": "Analyzing...",
+    "hint": "Hint",
+    "playToGetTips": "Play a move to get tips",
+    "checkmate": "Checkmate!",
+    "draw": "Draw",
+    "stalemate": "Stalemate",
+    "pieceNames": {
+      "p": "pawn",
+      "n": "knight",
+      "b": "bishop",
+      "r": "rook",
+      "q": "queen",
+      "k": "king"
+    },
+    "tips": {
+      "greatCapture": "Great capture! Net material gain.",
+      "badExchange": "Unfavorable exchange: your {{piece}} ({{value}} pts) risks being recaptured after taking a {{captured}} ({{capturedValue}} pts).",
+      "equalExchange": "Even trade of pieces.",
+      "captureDone": "Capture made.",
+      "check": "Check! Keep up the pressure and look to gain tempo.",
+      "castling": "Castling protects your king and activates the rook. Great instinct.",
+      "centerControl": "Good center control with a pawn. The center is key in the opening.",
+      "minorDevelopment": "Good minor piece development. Keep developing before attacking.",
+      "earlyQueen": "Bringing the queen out too early can make it vulnerable to tempo-gaining attacks.",
+      "flankPawn": "Pushing flank pawns early can weaken your structure. Prioritize the center and development.",
+      "samePieceTwice": "You're moving the same piece twice in the opening. Try developing your other pieces first.",
+      "kingMoved": "Moving the king without castling can be risky. Make sure it's safe."
+    }
+  },
+  "hint": {
+    "bestMove": "Best move:"
+  },
+  "moveHistory": {
+    "title": "Move History",
+    "white": "White",
+    "black": "Black",
+    "noMoves": "No moves played"
+  },
+  "gameEnd": {
+    "victory": "Victory!",
+    "defeat": "Defeat",
+    "draw": "Draw",
+    "stalemate": "Stalemate",
+    "victorySubtitle": "Checkmate! You won the game.",
+    "defeatSubtitle": "Checkmate. The opponent won.",
+    "drawSubtitle": "The game ends in a draw. Neither player can win.",
+    "stalemateSubtitle": "Stalemate! Your opponent has no legal moves but isn't in check. It's a draw.",
+    "viewAnalysis": "View game analysis",
+    "rematch": "Rematch",
+    "mainMenu": "Main menu"
+  },
+  "gameReview": {
+    "title": "Game Analysis",
+    "analyzing": "Analyzing each move...",
+    "accuracy": "Accuracy",
+    "best": "Best",
+    "noMoves": "No moves to analyze."
+  },
+  "moveQuality": {
+    "best": "Best move",
+    "excellent": "Excellent",
+    "good": "Good",
+    "inaccuracy": "Inaccuracy",
+    "mistake": "Mistake",
+    "blunder": "Blunder"
+  },
+  "nav": {
+    "learn": "Learn",
+    "techniques": "Techniques"
+  },
+  "learnPage": {
+    "piecesTitle": "The Pieces",
+    "piecesSubtitle": "Discover each piece: movement, value, utility, and expert tips.",
+    "value": "Value:",
+    "conceptsTitle": "Rules & Concepts",
+    "conceptsSubtitle": "The essential rules and ideas to master to play well.",
+    "eloTitle": "Rating System",
+    "eloSubtitle": "Understand how your score changes after each game.",
+    "movementLabel": "Movement",
+    "utilityLabel": "Strengths",
+    "tipsLabel": "Tips",
+    "eloTeaser": "ΔELO = K × (Score − Expected). Click for the full formula.",
+    "priceless": "priceless",
+    "pointsUnit": "points"
+  },
+  "techniquesPage": {
+    "tabTechniques": "Techniques",
+    "tabPuzzles": "Puzzles",
+    "all": "All",
+    "dailyPuzzle": "Puzzle of the day",
+    "allPuzzlesHeading": "All puzzles",
+    "dailyPuzzleCta": "→ Solve today's challenge",
+    "stepsHeading": "Steps",
+    "category": {
+      "quickMate": "Quick mate",
+      "openings": "Openings",
+      "matPatterns": "Mating patterns",
+      "tactics": "Tactics",
+      "endgames": "Endgames",
+      "strategy": "Strategy"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
+  },
+  "techniqueBoard": {
+    "prev": "Prev",
+    "next": "Next"
+  },
+  "puzzleBoard": {
+    "solved": "Well done! Puzzle solved!",
+    "wrongMove": "Wrong move, try again!",
+    "turnPrompt": "{{color}} to move — find the best move!",
+    "hintButton": "Hint",
+    "restart": "Restart",
+    "solution": "Solution:"
+  },
+  "pieces": {
+    "pawn": {
+      "name": "Pawn",
+      "movement": "Moves forward 1 square (2 on its first move). Captures diagonally. Promotes on reaching the last rank.",
+      "utility": "The backbone of the position. Controls the center, shields your pieces, and can become a queen.",
+      "tips": [
+        "Don't create doubled or isolated pawns without a good reason.",
+        "A passed pawn in the endgame is often worth a win.",
+        "In the center (e4, d4, e5, d5), a pawn is at its strongest."
+      ]
+    },
+    "knight": {
+      "name": "Knight",
+      "movement": "Moves in an L-shape (2+1 squares). The only piece that can jump over others.",
+      "utility": "Excellent in closed positions. Creates devastating forks.",
+      "tips": [
+        "Post it in the center (f3, c3, f6, c6) for maximum reach.",
+        "Avoid the edge: \"a knight on the rim is dim\".",
+        "Look for forks on king plus queen, or king plus rook."
+      ]
+    },
+    "bishop": {
+      "name": "Bishop",
+      "movement": "Moves diagonally, any distance. Stays on the same color square for its whole life.",
+      "utility": "King of open positions. The bishop pair is a lasting advantage.",
+      "tips": [
+        "Hold on to both bishops for as long as you can.",
+        "An active bishop on a long diagonal (fianchetto) is very powerful.",
+        "Avoid blocking your bishops behind your own pawns."
+      ]
+    },
+    "rook": {
+      "name": "Rook",
+      "movement": "Moves in a straight line (ranks and files), any distance.",
+      "utility": "Queen of open files and the 7th rank. Decisive in the endgame.",
+      "tips": [
+        "Double your rooks on an open file.",
+        "A rook on the 7th rank is often worth a pawn.",
+        "Activate your rooks by castling as early as possible."
+      ]
+    },
+    "queen": {
+      "name": "Queen",
+      "movement": "Combines the rook and bishop: ranks, files, and diagonals, any distance.",
+      "utility": "The most powerful piece. Use it to attack, not to defend on its own.",
+      "tips": [
+        "Don't bring the queen out too early — it just gets chased around.",
+        "Coordinate it with another piece to threaten mate.",
+        "In the endgame, it can deliver mate on its own with just the king's help."
+      ]
+    },
+    "king": {
+      "name": "King",
+      "movement": "Moves 1 square in any direction. Can never end a move in check.",
+      "utility": "Keep it safe in the opening; it becomes an active piece in the endgame.",
+      "tips": [
+        "Castle early to keep your king safe.",
+        "In the endgame, centralize your king — it's a strong piece (≈ 4 points).",
+        "Watch out for back-rank mate: leave your king an escape square in its pawn shield."
+      ]
+    }
+  },
+  "concepts": {
+    "checkCheckmateStalemate": {
+      "title": "Check, checkmate, and stalemate",
+      "body": "Check is an attack on the king — you must respond to it right away. Checkmate happens when there's no way out of check — the game ends there. Stalemate is a draw: the player to move has no legal move but isn't in check."
+    },
+    "castling": {
+      "title": "Castling",
+      "body": "A special move that shifts the king 2 squares toward a rook, then places that rook on the other side of it. Conditions: neither the king nor that rook has moved, no pieces stand between them, the king isn't in check, and it doesn't pass through an attacked square."
+    },
+    "enPassant": {
+      "title": "En passant",
+      "body": "If an opponent's pawn advances 2 squares and lands right beside yours, you can capture it as if it had only moved 1 square. You must do it immediately, or you lose the right."
+    },
+    "promotion": {
+      "title": "Promotion",
+      "body": "A pawn that reaches the last rank turns into a queen, rook, bishop, or knight — your choice. Usually a queen, but under-promoting to a knight can occasionally deliver a surprise mate."
+    },
+    "gamePhases": {
+      "title": "The phases of a game",
+      "body": "Opening (moves 1–15): develop your pieces, control the center, get your king to safety. Middlegame: build tactical and strategic plans. Endgame: activate your king and push a pawn to promotion."
+    },
+    "pieceValues": {
+      "title": "The value of the pieces",
+      "body": "Pawn = 1, Knight = 3, Bishop = 3, Rook = 5, Queen = 9, King = ∞. These values guide your trades, but how active a piece is matters just as much as its value on paper."
+    }
+  },
+  "eloExplained": {
+    "title": "How your ELO rating works",
+    "body": "The ELO system measures your real skill level relative to your opponents. You start at 1000.\n\nEach AI has a fixed rating:\n• {{amateurLabel}}: 400  • {{debutantLabel}}: 800  • {{intermediaireLabel}}: 1200  • {{avanceLabel}}: 1600  • {{expertLabel}}: 2000\n\nAfter each game, your ELO changes according to this formula:\nΔELO = K × (Score − Expected)\n\n— K = 32 (volatility factor)\n— Score: 1 (win), 0.5 (draw), 0 (loss)\n— Expected: your win probability, calculated from the rating gap\n\nIn practice: beating a much stronger opponent earns you a lot; losing to a weaker one costs you dearly. A game where no move was played doesn't change your ELO."
+  },
+  "techniques": {
+    "scholar-mate": {
+      "title": "Scholar's Mate",
+      "description": "The fastest possible mate, in 4 moves. Perfect for catching an inexperienced opponent off guard.",
+      "steps": [
+        "1. e2 → e4 , e7 → e5",
+        "2. f1 → c4 (eyes f7) , b8 → c6",
+        "3. d1 → h5 (double threat) , g8 → f6?? (bad defense)",
+        "4. h5 × f7# Checkmate!"
+      ],
+      "boardStepLabels": [
+        "Starting position",
+        "1. e2 → e4",
+        "1... e7 → e5",
+        "2. f1 → c4 (eyes f7)",
+        "2... b8 → c6 (a natural defense)",
+        "3. d1 → h5 (double threat!)",
+        "3... g8 → f6?? (bad defense)",
+        "4. h5 × f7# Checkmate!"
+      ]
+    },
+    "italian-opening": {
+      "title": "Italian Game",
+      "description": "One of the most classic openings. Central control and fast piece development.",
+      "steps": [
+        "1. e2 → e4 , e7 → e5",
+        "2. g1 → f3 (attacks e5) , b8 → c6 (defends)",
+        "3. f1 → c4 (the Italian) , f8 → c5 (Giuoco Piano)",
+        "4. O-O — king safe"
+      ],
+      "boardStepLabels": [
+        "Starting position",
+        "1. e2 → e4",
+        "1... e7 → e5",
+        "2. g1 → f3 (attacks e5)",
+        "2... b8 → c6 (defends e5)",
+        "3. f1 → c4 (the Italian!)",
+        "3... f8 → c5 (Giuoco Piano)",
+        "4. O-O — king safe, rook activated"
+      ]
+    },
+    "sicilian-defense": {
+      "title": "Sicilian Defense",
+      "description": "The most popular response to 1.e4. Creates sharp, asymmetrical play.",
+      "steps": [
+        "1. e2 → e4 , c7 → c5 (the Sicilian)",
+        "2. g1 → f3 , d7 → d6",
+        "3. d2 → d4 , c5 × d4",
+        "4. f3 × d4 (knight to the center) , g8 → f6"
+      ],
+      "boardStepLabels": [
+        "Starting position",
+        "1. e2 → e4",
+        "1... c7 → c5 (the Sicilian)",
+        "2. g1 → f3",
+        "2... d7 → d6 (heading toward the Najdorf)",
+        "3. d2 → d4 (opens the center)",
+        "3... c5 × d4",
+        "4. f3 × d4 (knight to the center)",
+        "4... g8 → f6 (attacks e4)"
+      ]
+    },
+    "back-rank": {
+      "title": "Back-Rank Mate",
+      "description": "Exploiting a king trapped on the back rank with no escape square.",
+      "steps": [
+        "Spot a king with no escape square",
+        "Its own pawns block the way out (f7, g7, h7)",
+        "Attack the back rank with a rook or queen",
+        "Deliver mate on the 8th rank"
+      ],
+      "boardStepLabels": [
+        "The black king is trapped by f7, g7, h7",
+        "a1 → a8# — back-rank mate!"
+      ]
+    },
+    "fork": {
+      "title": "The Fork",
+      "description": "Attacking two pieces at once with a single piece.",
+      "steps": [
+        "Spot two enemy pieces that are poorly placed",
+        "Move a knight to attack both of them",
+        "Your opponent can only save one piece",
+        "Capture the piece left behind"
+      ],
+      "boardStepLabels": [
+        "Knight ready to pounce: king and rook both exposed",
+        "f3 → d4: a fork on king and rook!"
+      ]
+    },
+    "pin": {
+      "title": "The Pin",
+      "description": "Immobilizing an enemy piece because moving it would expose a more valuable piece behind it.",
+      "steps": [
+        "Line up your long-range piece with an enemy piece",
+        "Behind it: a more valuable piece (king or queen)",
+        "The pinned piece can no longer move",
+        "Capture it for free"
+      ],
+      "boardStepLabels": [
+        "The bishop lines up the queen and king on the same diagonal",
+        "b3 × d5: the queen was pinned — a free capture!"
+      ]
+    },
+    "discovered-attack": {
+      "title": "Discovered Attack",
+      "description": "Moving one piece to unleash an attack from another piece hidden behind it.",
+      "steps": [
+        "Spot a line of attack that your own piece is blocking",
+        "Move the blocking piece somewhere it creates a threat too",
+        "The discovered attack creates a double threat",
+        "Your opponent can't defend against both"
+      ],
+      "boardStepLabels": [
+        "A typical discovered-attack setup",
+        "f3 × e5: unleashes the bishop's attack on f7!"
+      ]
+    },
+    "endgame-kp": {
+      "title": "King and Pawn Endgame",
+      "description": "Mastering the technique for promoting a pawn with the king's help.",
+      "steps": [
+        "Advance your king in front of the pawn",
+        "The concept of opposition: facing the enemy king head-on",
+        "The king shelters the pawn's advance",
+        "Promote to a queen"
+      ],
+      "boardStepLabels": [
+        "White king in front of the pawn — the key to this endgame",
+        "The king advances and takes the opposition",
+        "The king escorts it in — the pawn is about to promote"
+      ]
+    },
+    "castling-strategy": {
+      "title": "Castling Strategy",
+      "description": "When and how to castle to protect your king and activate your rook.",
+      "steps": [
+        "Develop your knight and bishop first",
+        "Don't move your king or rooks unnecessarily",
+        "Kingside castling (O-O): the classic safe choice",
+        "Queenside castling (O-O-O): sets up an attack on the kingside"
+      ],
+      "boardStepLabels": [
+        "Knight developed — get ready to castle",
+        "Bishop developed — ready to castle kingside",
+        "O-O: king safe, rook activated!"
+      ]
+    },
+    "smothered-mate": {
+      "title": "Smothered Mate",
+      "description": "An elegant mate where the knight delivers checkmate because the king is smothered by its own pieces.",
+      "steps": [
+        "The enemy king is stuck in a corner",
+        "Its own pieces surround it",
+        "The knight leaps to f7 or h7",
+        "Unstoppable mate"
+      ],
+      "boardStepLabels": [
+        "Knight on f7: smothered mate! The king is trapped by its own rook and pawns."
+      ]
+    }
+  },
+  "puzzles": {
+    "puzzle-1": {
+      "title": "Back-Rank Mate",
+      "description": "Find the move that delivers checkmate.",
+      "hint": "The back rank is weak..."
+    },
+    "puzzle-2": {
+      "title": "Knight Fork",
+      "description": "Position your knight to attack both the king and the rook.",
+      "hint": "A square that threatens two pieces at once."
+    },
+    "puzzle-3": {
+      "title": "Scholar's Mate",
+      "description": "Find the final mating move with the queen.",
+      "hint": "The f7 square is only defended by the king..."
+    },
+    "puzzle-4": {
+      "title": "Mate with the Queen",
+      "description": "Deliver checkmate in one move with your queen.",
+      "hint": "Aim for the back rank — the king is boxed in."
+    },
+    "puzzle-5": {
+      "title": "Mate with the Rook",
+      "description": "Deliver back-rank mate with your rook.",
+      "hint": "The black king is trapped by its own pawns."
+    },
+    "puzzle-6": {
+      "title": "Smothered Mate",
+      "description": "The knight delivers an elegant mate that nothing can block.",
+      "hint": "The knight lands somewhere no piece can get in the way."
+    },
+    "puzzle-7": {
+      "title": "Royal Skewer",
+      "description": "Win the queen by lining your rook up with the king.",
+      "hint": "Put the king in check — it'll have to move and leave the queen behind."
+    },
+    "puzzle-8": {
+      "title": "Winning Pin",
+      "description": "Use the pin to win the queen for free.",
+      "hint": "The queen can't move — its king is right behind it."
+    },
+    "puzzle-9": {
+      "title": "Decisive Promotion",
+      "description": "Promote your pawn to transform the endgame.",
+      "hint": "A brand-new queen changes everything."
+    },
+    "puzzle-10": {
+      "title": "Queen Double Attack",
+      "description": "Find the move that attacks the king and rook at the same time.",
+      "hint": "A diagonal that strikes two targets at once."
+    },
+    "puzzle-11": {
+      "title": "Sacrifice and Mate",
+      "description": "Sacrifice your queen for an unstoppable mate.",
+      "hint": "Look at the squares around the black king..."
+    },
+    "puzzle-12": {
+      "title": "Bishop Double Attack",
+      "description": "Find the move that creates an irresistible double threat.",
+      "hint": "The bishop can target two things at once."
+    }
+  },
+  "revolutionary": {
+    "energyLabel": "Energy",
+    "powers": {
+      "shield": {
+        "name": "Shield",
+        "description": "Protects one of your pieces from capture for your opponent's next move."
+      },
+      "freeze": {
+        "name": "Freeze",
+        "description": "Stops an enemy piece from moving on its next turn."
+      },
+      "evolve": {
+        "name": "Evolve",
+        "description": "Turns one of your pawns into a knight, right where it stands."
+      },
+      "elan": {
+        "name": "Élan",
+        "description": "Play an extra move immediately after this one."
+      }
+    },
+    "cost": "Cost",
+    "usesLeft": "{{count}} left",
+    "noEnergy": "Not enough energy",
+    "noUsesLeft": "No uses left",
+    "targetOwnPiece": "Pick one of your pieces",
+    "targetEnemyPiece": "Pick an enemy piece",
+    "targetOwnPawn": "Pick one of your pawns",
+    "cancel": "Cancel",
+    "elanBonusMove": "Élan! Play again right away.",
+    "log": {
+      "energyGained": "{{piece}} on {{square}}: +{{amount}} energy",
+      "powerCharged": "{{square}}: free {{power}} charge!",
+      "trapTriggered": "Trap on {{square}} — frozen next turn!",
+      "shieldActivated": "{{square}} shielded",
+      "freezeActivated": "{{square}} frozen",
+      "evolveActivated": "Pawn on {{square}} evolved into a knight",
+      "elanActivated": "Élan activated — an extra move is coming"
+    },
+    "pieceNames": {
+      "p": "Pawn",
+      "n": "Knight",
+      "b": "Bishop",
+      "r": "Rook",
+      "q": "Queen",
+      "k": "King"
+    },
+    "specialSquares": {
+      "energy": "Energy square",
+      "power": "Power square",
+      "trap": "Trap square"
+    },
+    "log_heading": "Log",
+    "noLog": "Nothing yet — develop your pieces!"
+  }
+}

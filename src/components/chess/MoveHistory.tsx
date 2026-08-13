@@ -1,5 +1,6 @@
 import React from 'react';
 import { Move } from 'chess.js';
+import { useTranslation } from 'react-i18next';
 
 interface MoveHistoryProps {
   moveHistory: Move[];
@@ -12,10 +13,11 @@ const formatMove = (move: Move): string => {
 };
 
 const MoveHistory: React.FC<MoveHistoryProps> = ({ moveHistory }) => {
+  const { t } = useTranslation();
   return (
     <div className="bg-card rounded-lg border border-border p-4 h-full flex flex-col">
       <h3 className="text-sm font-display font-semibold text-foreground mb-3">
-        Historique des coups
+        {t('moveHistory.title')}
       </h3>
 
       <div className="flex-1 overflow-y-auto">
@@ -23,15 +25,15 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ moveHistory }) => {
           <thead>
             <tr className="text-muted-foreground text-xs border-b border-border">
               <th className="py-2 text-left w-8">#</th>
-              <th className="py-2 text-left">♔ Blancs</th>
-              <th className="py-2 text-left">♚ Noirs</th>
+              <th className="py-2 text-left">♔ {t('moveHistory.white')}</th>
+              <th className="py-2 text-left">♚ {t('moveHistory.black')}</th>
             </tr>
           </thead>
           <tbody>
             {moveHistory.length === 0 ? (
               <tr>
                 <td colSpan={3} className="py-4 text-center text-muted-foreground text-xs">
-                  Aucun coup joué
+                  {t('moveHistory.noMoves')}
                 </td>
               </tr>
             ) : (
