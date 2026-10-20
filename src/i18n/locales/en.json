@@ -10,7 +10,8 @@
     "learn": "Learn",
     "poweredBy": "Powered by MarcusDrewStacks.",
     "soundToggle": "Sound",
-    "vibrationToggle": "Vibration"
+    "vibrationToggle": "Vibration",
+    "theme": "Theme"
   },
   "playConfig": {
     "title": "Setup",
@@ -540,5 +541,23 @@
     },
     "log_heading": "Log",
     "noLog": "Nothing yet — develop your pieces!"
+  },
+  "theme": {
+    "title": "Theme",
+    "board": "Board",
+    "pieces": "Pieces",
+    "boards": {
+      "classique": "Wood",
+      "vert": "Green",
+      "bleu": "Blue",
+      "ardoise": "Slate",
+      "nuit": "Night"
+    },
+    "pieceSets": {
+      "classique": "Classic",
+      "contraste": "Contrast",
+      "creme": "Cream",
+      "saphir": "Sapphire"
+    }
   }
 }

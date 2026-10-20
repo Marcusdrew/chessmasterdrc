@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import SensationsToggle from '@/components/SensationsToggle';
+import ThemeSettings from '@/components/ThemeSettings';
 
 const Menu: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [themeOpen, setThemeOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-4">
@@ -64,7 +66,21 @@ const Menu: React.FC = () => {
         >
           🎓 {t('menu.learn')}
         </motion.button>
+
+        <motion.button
+          onClick={() => setThemeOpen(true)}
+          className="w-full py-4 px-8 rounded-lg bg-secondary text-secondary-foreground font-display text-lg font-semibold tracking-wide hover:opacity-90 transition-opacity border border-border"
+          initial={{ x: 40, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.65, duration: 0.5 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          🎨 {t('menu.theme')}
+        </motion.button>
       </div>
+
+      <ThemeSettings open={themeOpen} onClose={() => setThemeOpen(false)} />
 
       <motion.p
         className="mt-12 text-xs text-muted-foreground font-body"
