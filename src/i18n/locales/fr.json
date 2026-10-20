@@ -8,9 +8,28 @@
     "play": "Jouer",
     "techniques": "Techniques",
     "learn": "Apprendre",
+    "theme": "Thème",
     "poweredBy": "Propulsé par MarcusDrewStacks.",
     "soundToggle": "Son",
     "vibrationToggle": "Vibrations"
+  },
+  "theme": {
+    "title": "Thème",
+    "board": "Échiquier",
+    "pieces": "Pièces",
+    "boards": {
+      "classique": "Bois",
+      "vert": "Vert",
+      "bleu": "Bleu",
+      "ardoise": "Ardoise",
+      "nuit": "Nuit"
+    },
+    "pieceSets": {
+      "classique": "Classique",
+      "contraste": "Contraste",
+      "creme": "Crème",
+      "saphir": "Saphir"
+    }
   },
   "playConfig": {
     "title": "Configuration",
