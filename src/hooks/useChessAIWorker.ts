@@ -6,7 +6,7 @@ import type { ChessAIRequest, ChessAIResponse } from '@/workers/chessAI.protocol
 
 type PendingEntry =
   | { kind: 'bestMove'; resolve: (move: Move | null) => void; reject: (err: Error) => void }
-  | { kind: 'analyzeGame'; resolve: (summary: GameReviewSummary) => void; reject: (err: Error) => void };
+  | { kind: 'analyzeGame'; resolve: (summary: GameReviewSummary) => void; reject: (err: Error) => void; onProgress?: (done: number, total: number) => void };
 
 /**
  * Owns one chess-AI Web Worker for the lifetime of the calling component,
