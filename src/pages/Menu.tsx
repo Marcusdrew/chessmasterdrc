@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import SensationsToggle from '@/components/SensationsToggle';
+import ThemeSettings from '@/components/ThemeSettings';
 
 const Menu: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [themeOpen, setThemeOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-4">
