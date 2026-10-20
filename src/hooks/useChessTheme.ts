@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-
-export const BOARD_THEMES = ['classique', 'vert', 'bleu', 'ardoise', 'nuit'] as const;
-export const PIECE_THEMES = ['classique', 'contraste', 'creme', 'saphir'] as const;
-
-export type BoardTheme = (typeof BOARD_THEMES)[number];
-export type PieceTheme = (typeof PIECE_THEMES)[number];
+import {
+  BOARD_THEMES,
+  PIECE_THEMES,
+  type BoardTheme,
+  type PieceTheme,
+} from '@/lib/chessThemes';
 
 const BOARD_KEY = 'chess-board-theme';
 const PIECE_KEY = 'chess-piece-theme';
@@ -25,8 +25,8 @@ const apply = (board: BoardTheme, piece: PieceTheme) => {
 };
 
 /**
- * Board + piece color themes, persisted in localStorage and applied
- * globally via data attributes on <html> (see src/index.css).
+ * Thème d'échiquier + couleurs de pièces, persistés en localStorage et
+ * appliqués globalement via des attributs data sur <html> (cf. src/index.css).
  */
 export const useChessTheme = () => {
   const [boardTheme, setBoardThemeState] = useState<BoardTheme>(() =>
