@@ -53,6 +53,7 @@
     --chess-check: 0 72% 51%;
     --chess-white-piece: 38 35% 94%;
     --chess-black-piece: 20 10% 12%;
+    --chess-piece-stroke: 20 10% 12%;
 
     /* Revolutionary-mode tokens: energy (electric blue), power (violet),
        trap (burnt orange) — deliberately outside the warm board palette so
@@ -92,6 +93,41 @@
     --rev-power: 265 65% 68%;
     --rev-trap: 15 80% 58%;
   }
+
+  /* ---- Thèmes d'échiquier (surchargent --chess-light / --chess-dark) ---- */
+  :root[data-board-theme='vert'] {
+    --chess-light: 90 25% 88%;
+    --chess-dark: 140 30% 40%;
+  }
+  :root[data-board-theme='bleu'] {
+    --chess-light: 205 35% 88%;
+    --chess-dark: 210 45% 42%;
+  }
+  :root[data-board-theme='ardoise'] {
+    --chess-light: 30 8% 88%;
+    --chess-dark: 220 8% 40%;
+  }
+  :root[data-board-theme='nuit'] {
+    --chess-light: 225 15% 32%;
+    --chess-dark: 230 20% 18%;
+  }
+
+  /* ---- Thèmes de pièces (remplissage + contour) ---- */
+  :root[data-piece-theme='contraste'] {
+    --chess-white-piece: 0 0% 100%;
+    --chess-black-piece: 0 0% 4%;
+    --chess-piece-stroke: 0 0% 4%;
+  }
+  :root[data-piece-theme='creme'] {
+    --chess-white-piece: 40 60% 92%;
+    --chess-black-piece: 20 55% 22%;
+    --chess-piece-stroke: 20 55% 16%;
+  }
+  :root[data-piece-theme='saphir'] {
+    --chess-white-piece: 40 60% 94%;
+    --chess-black-piece: 215 60% 28%;
+    --chess-piece-stroke: 215 60% 16%;
+  }
 }
 
 @layer base {
@@ -114,12 +150,11 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  /* Pièces blanches : remplissage clair + contour foncé pour les
-     distinguer nettement des pièces noires, sur cases claires comme foncées. */
+  /* Pièces blanches : remplissage clair + contour fin pour les distinguer
+     nettement des pièces noires, sur cases claires comme foncées. */
   .chess-piece-w {
     color: hsl(var(--chess-white-piece));
-    -webkit-text-stroke: 1.5px hsl(var(--chess-black-piece));
-    text-shadow: 0 0 1px hsl(var(--chess-black-piece));
+    -webkit-text-stroke: 1px hsl(var(--chess-piece-stroke));
     paint-order: stroke fill;
   }
 
