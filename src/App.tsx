@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SensationsProvider } from "@/contexts/SensationsContext";
+import { useChessTheme } from "@/hooks/useChessTheme";
 import Menu from "./pages/Menu";
 import PlayConfig from "./pages/PlayConfig";
 import Game from "./pages/Game";
@@ -14,7 +15,10 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  // Applique le thème d'échiquier/pièces sauvegardé sur toutes les pages.
+  useChessTheme();
+  return (
   <QueryClientProvider client={queryClient}>
     <SensationsProvider>
       <TooltipProvider>
@@ -34,6 +38,7 @@ const App = () => (
       </TooltipProvider>
     </SensationsProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
