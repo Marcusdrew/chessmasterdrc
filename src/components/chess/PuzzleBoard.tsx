@@ -123,7 +123,7 @@ const PuzzleBoard: React.FC<PuzzleBoardProps> = ({ fen, solution, hint }) => {
                     }`}
                   >
                     {symbol && (
-                      <span className={piece?.color === 'w' ? 'text-chess-white-piece' : 'text-chess-black-piece'}>
+                      <span className={piece?.color === 'w' ? 'chess-piece-w' : 'chess-piece-b'}>
                         {symbol}
                       </span>
                     )}
