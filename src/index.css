@@ -113,4 +113,17 @@
   .chess-board-shadow {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+
+  /* Pièces blanches : remplissage clair + contour foncé pour les
+     distinguer nettement des pièces noires, sur cases claires comme foncées. */
+  .chess-piece-w {
+    color: hsl(var(--chess-white-piece));
+    -webkit-text-stroke: 1.5px hsl(var(--chess-black-piece));
+    text-shadow: 0 0 1px hsl(var(--chess-black-piece));
+    paint-order: stroke fill;
+  }
+
+  .chess-piece-b {
+    color: hsl(var(--chess-black-piece));
+  }
 }
