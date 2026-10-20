@@ -6,7 +6,7 @@ import type { ChessAIRequest, ChessAIResponse } from '@/workers/chessAI.protocol
 
 type PendingEntry =
   | { kind: 'bestMove'; resolve: (move: Move | null) => void; reject: (err: Error) => void }
-  | { kind: 'analyzeGame'; resolve: (summary: GameReviewSummary) => void; reject: (err: Error) => void };
+  | { kind: 'analyzeGame'; resolve: (summary: GameReviewSummary) => void; reject: (err: Error) => void; onProgress?: (done: number, total: number) => void };
 
 /**
  * Owns one chess-AI Web Worker for the lifetime of the calling component,
@@ -35,6 +35,12 @@ export function useChessAIWorker() {
         const response = event.data;
         const entry = pendingRef.current.get(response.id);
         if (!entry) return; // stale or unknown id — nothing to resolve
+
+        // Progress ticks don't complete the request — keep the entry pending.
+        if (response.kind === 'progress') {
+          if (entry.kind === 'analyzeGame') entry.onProgress?.(response.done, response.total);
+          return;
+        }
         pendingRef.current.delete(response.id);
 
         if (response.kind === 'error') {
@@ -97,14 +103,19 @@ export function useChessAIWorker() {
   );
 
   const analyzeGameAsync = useCallback(
-    (moves: Move[], playerColor: 'w' | 'b', depth?: number): Promise<GameReviewSummary> => {
+    (
+      moves: Move[],
+      playerColor: 'w' | 'b',
+      depth?: number,
+      onProgress?: (done: number, total: number) => void
+    ): Promise<GameReviewSummary> => {
       if (brokenRef.current || !workerRef.current) {
-        return Promise.resolve(analyzeGame(moves, playerColor, depth));
+        return Promise.resolve(analyzeGame(moves, playerColor, depth, onProgress));
       }
       const worker = workerRef.current;
       const id = nextIdRef.current++;
       return new Promise<GameReviewSummary>((resolve, reject) => {
-        pendingRef.current.set(id, { kind: 'analyzeGame', resolve, reject });
+        pendingRef.current.set(id, { kind: 'analyzeGame', resolve, reject, onProgress });
         const request: ChessAIRequest = { id, kind: 'analyzeGame', moves, playerColor, depth };
         worker.postMessage(request);
       });

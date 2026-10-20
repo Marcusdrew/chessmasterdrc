@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Move, Chess } from 'chess.js';
-import { useTranslation, TFunction } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 interface AiAnalysisProps {
   moveHistory: Move[];

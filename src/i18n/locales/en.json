@@ -8,7 +8,7 @@
     "play": "Play",
     "techniques": "Techniques",
     "learn": "Learn",
-    "poweredBy": "Powered by Artificial Intelligence",
+    "poweredBy": "Powered by MarcusDrewStacks.",
     "soundToggle": "Sound",
     "vibrationToggle": "Vibration"
   },
@@ -96,9 +96,19 @@
   "gameReview": {
     "title": "Game Analysis",
     "analyzing": "Analyzing each move...",
+    "preparing": "Preparing the analysis...",
+    "progress": "Move {{current}} of {{total}} analyzed",
     "accuracy": "Accuracy",
     "best": "Best",
-    "noMoves": "No moves to analyze."
+    "noMoves": "No moves to analyze.",
+    "tapToView": "Tap a move to review the position on the board.",
+    "viewBest": "Show best move",
+    "viewPlayed": "Show played move",
+    "positionBefore": "Position before move #{{number}}",
+    "tip1": "Before each move, ask yourself: what is my opponent threatening?",
+    "tip2": "Control the center: pieces in the center dominate the board.",
+    "tip3": "Castling protects your king and activates your rook in one move.",
+    "tip4": "Don't bring your queen out too early: she becomes a target."
   },
   "moveQuality": {
     "best": "Best move",
