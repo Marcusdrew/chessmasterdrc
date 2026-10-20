@@ -74,6 +74,7 @@ export function analyzeGame(
   moves: Move[],
   playerColor: 'w' | 'b',
   depth: number = 2,
+  onProgress?: (done: number, total: number) => void,
 ): GameReviewSummary {
   const game = new Chess();
   const reviewed: ReviewedMove[] = [];
@@ -116,6 +117,7 @@ export function analyzeGame(
       // Opponent move — just play it
       game.move({ from: m.from, to: m.to, promotion: m.promotion });
     }
+    onProgress?.(i + 1, moves.length);
   }
 
   const counts: Record<MoveQuality, number> = {

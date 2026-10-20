@@ -32,7 +32,10 @@ ctx.onmessage = (event: MessageEvent<ChessAIRequest>) => {
     }
 
     if (request.kind === 'analyzeGame') {
-      const summary = analyzeGame(request.moves, request.playerColor, request.depth);
+      const summary = analyzeGame(request.moves, request.playerColor, request.depth, (done, total) => {
+        const progress: ChessAIResponse = { id: request.id, kind: 'progress', done, total };
+        ctx.postMessage(progress);
+      });
       const response: ChessAIResponse = { id: request.id, kind: 'analyzeGame', summary };
       ctx.postMessage(response);
       return;

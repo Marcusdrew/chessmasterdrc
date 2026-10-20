@@ -27,4 +27,5 @@ export type ChessAIRequest =
 export type ChessAIResponse =
   | { id: number; kind: 'bestMove'; move: Move | null }
   | { id: number; kind: 'analyzeGame'; summary: GameReviewSummary }
+  | { id: number; kind: 'progress'; done: number; total: number }
   | { id: number; kind: 'error'; message: string };
