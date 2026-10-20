@@ -72,7 +72,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         </div>
 
         {/* Board */}
-        <div className="grid grid-cols-8 w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]">
+        <div className="grid grid-cols-8 grid-rows-8 w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]">
           {displayBoard.map((row, rowIdx) =>
             row.map((piece, colIdx) => {
               const actualRow = playerColor === 'b' ? 7 - rowIdx : rowIdx;

@@ -8,7 +8,7 @@
     "play": "Jouer",
     "techniques": "Techniques",
     "learn": "Apprendre",
-    "poweredBy": "Propulsé par l'Intelligence Artificielle",
+    "poweredBy": "Propulsé par MarcusDrewStacks.",
     "soundToggle": "Son",
     "vibrationToggle": "Vibrations"
   },
@@ -96,9 +96,19 @@
   "gameReview": {
     "title": "Analyse de la partie",
     "analyzing": "Analyse de chaque coup en cours...",
+    "preparing": "Préparation de l'analyse...",
+    "progress": "Coup {{current}} sur {{total}} analysé",
     "accuracy": "Précision",
     "best": "Meilleur",
-    "noMoves": "Aucun coup à analyser."
+    "noMoves": "Aucun coup à analyser.",
+    "tapToView": "Touchez un coup pour revoir la position sur l'échiquier.",
+    "viewBest": "Voir le meilleur coup",
+    "viewPlayed": "Voir le coup joué",
+    "positionBefore": "Position avant le coup n°{{number}}",
+    "tip1": "Avant chaque coup, demandez-vous : que menace mon adversaire ?",
+    "tip2": "Contrôlez le centre : les pièces au centre dominent l'échiquier.",
+    "tip3": "Le roque protège votre roi et active votre tour en un seul coup.",
+    "tip4": "Ne sortez pas votre dame trop tôt : elle devient une cible."
   },
   "moveQuality": {
     "best": "Meilleur coup",
