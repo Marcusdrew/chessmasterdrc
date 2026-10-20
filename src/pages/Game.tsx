@@ -204,6 +204,7 @@ const Game: React.FC = () => {
           currentTurn={currentTurn}
           playerColor={playerColor}
           hint={hint}
+          lastMove={state.moveHistory.at(-1)}
           onSquareClick={handleSquareClick}
         />
 
@@ -228,7 +229,7 @@ const Game: React.FC = () => {
         </div>
       </div>
 
-      <GameEndModal
+      {!showReview && <GameEndModal
         gameStatus={state.gameStatus}
         winner={state.winner}
         playerColor={playerColor}
@@ -237,7 +238,7 @@ const Game: React.FC = () => {
         eloChange={eloChange}
         newElo={eloUpdated ? elo : null}
         onReview={state.moveHistory.length > 0 ? () => setShowReview(true) : undefined}
-      />
+      />}
 
       <GameReview
         open={showReview}

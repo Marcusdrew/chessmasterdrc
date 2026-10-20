@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Chess, type Move } from 'chess.js';
@@ -31,6 +32,10 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
   const [tipIndex, setTipIndex] = useState(0);
   const [selected, setSelected] = useState<ReviewedMove | null>(null);
   const [showBest, setShowBest] = useState(false);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const cache = useRef<{ key: string; summary: GameReviewSummary } | null>(null);
+  const reviewKey = `${playerColor}:${moveHistory.map(m => m.san).join(' ')}`;
 
   // Position before each ply, so a reviewed move can be replayed visually.
   const boards = useMemo(() => {
@@ -45,7 +50,13 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
 
   useEffect(() => {
     if (!open) return;
+    if (cache.current?.key === reviewKey) {
+      setSummary(cache.current.summary);
+      setLoading(false);
+      return;
+    }
     let cancelled = false;
+    setError(false);
     setLoading(true);
     setSummary(null);
     setProgress(null);
@@ -59,12 +70,17 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
         if (!cancelled) setProgress({ done, total });
       }).then(s => {
         if (cancelled) return;
+        cache.current = { key: reviewKey, summary: s };
         setSummary(s);
         setLoading(false);
+      }).catch(() => {
+        if (cancelled) return;
+        setLoading(false);
+        setError(true);
       });
     }, 50);
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [open, moveHistory, playerColor, analyzeGameAsync]);
+  }, [open, moveHistory, playerColor, analyzeGameAsync, reviewKey, attempt]);
 
   // Rotate tips while the analysis runs so the wait feels shorter.
   useEffect(() => {
@@ -88,6 +104,9 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
   return (
     <AnimatePresence>
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('gameReview.title')}
         className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 backdrop-blur-sm p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -110,6 +129,12 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
           </header>
 
           <div className="flex-1 overflow-y-auto p-5">
+            {error && (
+              <div className="py-8 text-center space-y-4">
+                <p role="alert" className="text-sm text-destructive">{t('gameReview.error')}</p>
+                <Button variant="outline" onClick={() => setAttempt(n => n + 1)}>{t('gameReview.retry')}</Button>
+              </div>
+            )}
             {loading && (
               <div className="flex flex-col items-center justify-center py-12 px-4">
                 <p className="text-sm font-body text-foreground mb-3">

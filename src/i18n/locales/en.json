@@ -39,7 +39,8 @@
     "opponentThinking": "Opponent is thinking...",
     "yourTurn": "Your turn",
     "opponentTurn": "Opponent's turn",
-    "undo": "Undo"
+    "undo": "Undo",
+    "lastOpponentMove": "Opponent — {{piece}}"
   },
   "aiCoach": {
     "title": "AI Coach",
@@ -96,6 +97,8 @@
   },
   "gameReview": {
     "title": "Game Analysis",
+    "error": "The analysis could not complete. Your game is still available.",
+    "retry": "Retry",
     "analyzing": "Analyzing each move...",
     "preparing": "Preparing the analysis...",
     "progress": "Move {{current}} of {{total}} analyzed",

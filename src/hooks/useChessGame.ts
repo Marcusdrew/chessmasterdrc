@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Chess, Square, Move } from 'chess.js';
 import { Difficulty } from '@/lib/chessAI';
 import { useChessAIWorker } from './useChessAIWorker';
@@ -44,8 +44,8 @@ export const useChessGame = (
     validMoves: [],
     moveHistory: gameRef.current.history({ verbose: true }) as Move[],
     isAiThinking: false,
-    gameStatus: 'playing',
-    winner: null,
+    gameStatus: gameRef.current.isCheckmate() ? 'checkmate' : gameRef.current.isStalemate() ? 'stalemate' : gameRef.current.isDraw() ? 'draw' : 'playing',
+    winner: gameRef.current.isCheckmate() ? (gameRef.current.turn() === 'w' ? 'b' : 'w') : null,
   });
 
   const updateGameStatus = useCallback(() => {
@@ -88,7 +88,10 @@ export const useChessGame = (
         // if so, this result belongs to a board that no longer exists.
         if (generationRef.current !== myGeneration) return;
         thinkingForGenerationRef.current = null;
-        if (!chosen) return;
+        if (!chosen) {
+          setState(prev => ({ ...prev, isAiThinking: false }));
+          return;
+        }
 
         const result = game.move({ from: chosen.from, to: chosen.to, promotion: chosen.promotion });
         if (result) {
@@ -111,12 +114,15 @@ export const useChessGame = (
       });
   }, [updateGameStatus, difficulty, getMoveAsync, playerColor, triggerFeedback]);
 
-  // If AI plays first (player is black), trigger AI on mount
-  const hasInitialMove = useRef(false);
-  if (vsAi && playerColor === 'b' && !hasInitialMove.current && state.moveHistory.length === 0 && state.gameStatus === 'playing') {
-    hasInitialMove.current = true;
-    setTimeout(() => makeAiMove(), 500);
-  }
+  // Resume an interrupted AI turn, including when the player chose black.
+  useEffect(() => {
+    if (vsAi && state.gameStatus === 'playing' && gameRef.current.turn() !== playerColor) makeAiMove();
+  }, [vsAi, playerColor, state.gameStatus, fen, makeAiMove]);
+
+  useEffect(() => () => {
+    generationRef.current += 1;
+    thinkingForGenerationRef.current = null;
+  }, []);
 
   const handleSquareClick = useCallback((square: Square) => {
     const game = gameRef.current;
@@ -203,23 +209,22 @@ export const useChessGame = (
   const resetGame = useCallback(() => {
     generationRef.current += 1; // invalidate any AI computation still in flight
     gameRef.current = new Chess();
-    hasInitialMove.current = false;
+    thinkingForGenerationRef.current = null;
     setFen(gameRef.current.fen());
     setState({
       selectedSquare: null, validMoves: [], moveHistory: [],
       isAiThinking: false, gameStatus: 'playing', winner: null,
     });
-    if (vsAi && playerColor === 'b') {
-      hasInitialMove.current = true;
-      setTimeout(() => makeAiMove(), 500);
-    }
-  }, [vsAi, playerColor, makeAiMove]);
+  }, []);
 
   const getBoard = useCallback(() => gameRef.current.board(), []);
   const isInCheck = useCallback(() => gameRef.current.isCheck(), []);
   const currentTurn = useCallback(() => gameRef.current.turn(), []);
 
   const forceEnd = useCallback((loser: 'w' | 'b') => {
+    // A reply still computing must never change a finished match back to playing.
+    generationRef.current += 1;
+    thinkingForGenerationRef.current = null;
     const winner = loser === 'w' ? 'b' : 'w';
     triggerFeedback(winner === playerColor ? 'checkmateWin' : 'checkmateLoss');
     setState(prev => ({

@@ -56,6 +56,10 @@ export function useChessAIWorker() {
 
       worker.onerror = () => {
         brokenRef.current = true;
+        worker?.terminate();
+        workerRef.current = null;
+        pendingRef.current.forEach(entry => entry.reject(new Error('Le moteur IA est indisponible')));
+        pendingRef.current.clear();
       };
 
       workerRef.current = worker;

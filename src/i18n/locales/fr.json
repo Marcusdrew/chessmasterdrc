@@ -57,7 +57,8 @@
     "opponentThinking": "Adversaire réfléchit...",
     "yourTurn": "Votre tour",
     "opponentTurn": "Tour de l'adversaire",
-    "undo": "Annuler"
+    "undo": "Annuler",
+    "lastOpponentMove": "Adversaire — {{piece}}"
   },
   "aiCoach": {
     "title": "Conseils IA",
@@ -114,6 +115,8 @@
   },
   "gameReview": {
     "title": "Analyse de la partie",
+    "error": "L’analyse n’a pas pu aboutir. Votre partie est toujours disponible.",
+    "retry": "Réessayer",
     "analyzing": "Analyse de chaque coup en cours...",
     "preparing": "Préparation de l'analyse...",
     "progress": "Coup {{current}} sur {{total}} analysé",

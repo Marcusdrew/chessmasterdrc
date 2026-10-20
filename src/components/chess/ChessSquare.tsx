@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Square } from 'chess.js';
 import { getPieceSymbol } from '@/lib/chessPieces';
 
@@ -12,6 +12,9 @@ interface ChessSquareProps {
   isCheck: boolean;
   isHintFrom?: boolean;
   isHintTo?: boolean;
+  isLastFrom?: boolean;
+  isLastTo?: boolean;
+  movementFrom?: { x: number; y: number; key: string };
   /** Revolutionary mode only — all optional, no-op when omitted so classic
    * mode's rendering is completely unaffected. */
   specialType?: 'energy' | 'power' | 'trap';
@@ -40,11 +43,12 @@ const getSquareName = (row: number, col: number): Square => {
 
 const ChessSquare: React.FC<ChessSquareProps> = ({
   row, col, piece, isSelected, isValidMove, isCheck, isHintFrom, isHintTo,
-  specialType, isFrozen, isShielded, isTargetable, onClick,
+  specialType, isFrozen, isShielded, isTargetable, isLastFrom, isLastTo, movementFrom, onClick,
 }) => {
   const square = getSquareName(row, col);
   const isLight = (row + col) % 2 === 0;
   const symbol = getPieceSymbol(piece);
+  const reducedMotion = useReducedMotion();
 
   return (
     <motion.div
@@ -60,8 +64,14 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
         hover:brightness-110
       `}
       onClick={() => onClick(square)}
+      role="button"
+      aria-label={square}
+      data-last-move={isLastFrom ? 'from' : isLastTo ? 'to' : undefined}
       whileTap={{ scale: 0.95 }}
     >
+      {(isLastFrom || isLastTo) && (
+        <div className={`absolute inset-0 pointer-events-none ${isLastTo ? 'bg-chess-selected/45 ring-2 ring-chess-selected ring-inset' : 'bg-chess-selected/25'}`} />
+      )}
       {/* Special square marker — small and corner-anchored so it never
           competes with the piece glyph for attention */}
       {specialType && (
@@ -100,11 +110,13 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
       {/* Piece */}
       {symbol && (
         <motion.span
-          className={`text-3xl md:text-4xl leading-none ${
+          key={movementFrom?.key ?? square}
+          className={`absolute inset-0 z-10 flex items-center justify-center pointer-events-none text-3xl md:text-4xl leading-none ${
             piece?.color === 'w' ? 'chess-piece-w' : 'chess-piece-b'
           } ${isSelected ? 'scale-110' : ''} ${isFrozen ? 'opacity-50' : ''}`}
-          layout
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          initial={movementFrom && !reducedMotion ? { x: `${movementFrom.x}%`, y: `${movementFrom.y}%` } : false}
+          animate={{ x: '0%', y: '0%' }}
+          transition={{ duration: reducedMotion ? 0 : 0.65, ease: [0.22, 0.61, 0.36, 1] }}
         >
           {symbol}
         </motion.span>
