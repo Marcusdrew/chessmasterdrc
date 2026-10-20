@@ -19,17 +19,25 @@ describe('GameReview', () => {
 
   it('analyse la partie puis affiche la position quand on clique sur un coup', async () => {
     const moves = playedMoves(['e4', 'e5', 'Bc4', 'Nc6', 'Qh5', 'Nf6', 'Qxf7#']);
-    render(<GameReview open onClose={() => {}} moveHistory={moves} playerColor="w" />);
+    const onClose = () => {};
+    const { rerender } = render(<GameReview open onClose={onClose} moveHistory={moves} playerColor="w" />);
 
     // The analysis completes (fallback path, no Worker in jsdom) and shows accuracy.
     await screen.findByText('Précision', {}, { timeout: 15000 });
 
     // Clicking a move row reveals the board preview of the position before it.
     const rows = await screen.findAllByText(/→/);
-    fireEvent.click(rows[0].closest('button')!);
+    const row = rows[0].closest('button');
+    if (!row) throw new Error('Move row missing');
+    fireEvent.click(row);
     await waitFor(() => {
       expect(screen.getByText(/Position avant le coup/)).toBeInTheDocument();
     });
+    // Reopening must keep the completed result instead of restarting analysis.
+    rerender(<GameReview open={false} onClose={onClose} moveHistory={moves} playerColor="w" />);
+    rerender(<GameReview open onClose={onClose} moveHistory={moves} playerColor="w" />);
+    expect(screen.getByText('Précision')).toBeInTheDocument();
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   }, 30000);
 
   it('signale la progression pendant l\'analyse', async () => {

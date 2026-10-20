@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Square } from 'chess.js';
+import { Square, type Move } from 'chess.js';
+import { useTranslation } from 'react-i18next';
 import ChessSquare from './ChessSquare';
 
 interface ChessBoardProps {
@@ -11,6 +12,7 @@ interface ChessBoardProps {
   currentTurn: string;
   playerColor: 'w' | 'b';
   hint?: { from: string; to: string } | null;
+  lastMove?: Move;
   /** Revolutionary mode only — all optional. */
   specialSquares?: { square: string; type: 'energy' | 'power' | 'trap' }[];
   frozenSquares?: string[];
@@ -20,9 +22,30 @@ interface ChessBoardProps {
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({
-  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, hint,
+  board, selectedSquare, validMoves, isInCheck, currentTurn, playerColor, hint, lastMove,
   specialSquares, frozenSquares, shieldedSquares, targetableSquares, onSquareClick,
 }) => {
+  const { t } = useTranslation();
+  const movementFrom = (square: string) => {
+    if (!lastMove) return undefined;
+    let from = lastMove.from as string;
+    let to = lastMove.to as string;
+    if (lastMove.flags.includes('k') || lastMove.flags.includes('q')) {
+      const rank = lastMove.from[1];
+      const kingside = lastMove.flags.includes('k');
+      if (square === `${kingside ? 'f' : 'd'}${rank}`) {
+        from = `${kingside ? 'h' : 'a'}${rank}`;
+        to = square;
+      }
+    }
+    if (square !== to) return undefined;
+    const orientation = playerColor === 'b' ? -1 : 1;
+    return {
+      x: (from.charCodeAt(0) - to.charCodeAt(0)) * 100 * orientation,
+      y: (Number(to[1]) - Number(from[1])) * 100 * orientation,
+      key: lastMove.after,
+    };
+  };
   const findKingSquare = (): string | null => {
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
@@ -47,13 +70,13 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   return (
     <motion.div
-      className="relative rounded-lg overflow-hidden chess-board-shadow border border-border"
+      className="relative w-[368px] sm:w-[448px] md:w-[528px] lg:w-[608px] max-w-full shrink-0 rounded-lg overflow-hidden chess-board-shadow border border-border"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4 }}
     >
       {/* Top file labels */}
-      <div className="flex ml-6">
+      <div className="flex mx-6">
         {files.split('').map(f => (
           <div key={`top-${f}`} className="flex-1 text-center text-[11px] font-body text-muted-foreground py-0.5">
             {f}
@@ -63,7 +86,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
       <div className="flex">
         {/* Left rank labels */}
-        <div className="flex flex-col w-6">
+        <div className="flex flex-col w-6 shrink-0">
           {ranks.split('').map(r => (
             <div key={`left-${r}`} className="flex-1 flex items-center justify-center text-[11px] font-body text-muted-foreground">
               {r}
@@ -72,7 +95,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         </div>
 
         {/* Board */}
-        <div className="grid grid-cols-8 grid-rows-8 w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]">
+        <div className="grid grid-cols-8 grid-rows-8 flex-1 min-w-0 aspect-square">
           {displayBoard.map((row, rowIdx) =>
             row.map((piece, colIdx) => {
               const actualRow = playerColor === 'b' ? 7 - rowIdx : rowIdx;
@@ -89,6 +112,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
                   isCheck={kingSquare === square}
                   isHintFrom={hint?.from === square}
                   isHintTo={hint?.to === square}
+                  isLastFrom={lastMove?.from === square}
+                  isLastTo={lastMove?.to === square}
+                  movementFrom={movementFrom(square)}
                   specialType={specialSquares?.find(s => s.square === square)?.type}
                   isFrozen={frozenSquares?.includes(square)}
                   isShielded={shieldedSquares?.includes(square)}
@@ -101,7 +127,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         </div>
 
         {/* Right rank labels */}
-        <div className="flex flex-col w-6">
+        <div className="flex flex-col w-6 shrink-0">
           {ranks.split('').map(r => (
             <div key={`right-${r}`} className="flex-1 flex items-center justify-center text-[11px] font-body text-muted-foreground">
               {r}
@@ -111,13 +137,19 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       </div>
 
       {/* Bottom file labels */}
-      <div className="flex ml-6">
+      <div className="flex mx-6">
         {files.split('').map(f => (
           <div key={`bottom-${f}`} className="flex-1 text-center text-[11px] font-body text-muted-foreground py-0.5">
             {f}
           </div>
         ))}
       </div>
+      {lastMove && lastMove.color !== playerColor && (
+        <p className="text-center text-xs font-body text-foreground py-2 bg-card" role="status">
+          {t('game.lastOpponentMove', { piece: t(`aiCoach.pieceNames.${lastMove.piece}`) })}
+          {' : '}<span className="font-mono" translate="no">{lastMove.from} → {lastMove.to}</span>
+        </p>
+      )}
     </motion.div>
   );
 };
