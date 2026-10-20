@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import type { Move } from 'chess.js';
+import { Chess, type Move } from 'chess.js';
 import { useChessAIWorker } from '@/hooks/useChessAIWorker';
+import ChessBoard from '@/components/chess/ChessBoard';
 import {
   qualityColor,
   qualityIcon,
   type GameReviewSummary,
   type MoveQuality,
+  type ReviewedMove,
 } from '@/lib/gameReview';
 
 interface GameReviewProps {
@@ -18,23 +20,44 @@ interface GameReviewProps {
 }
 
 const QUALITY_ORDER: MoveQuality[] = ['best', 'excellent', 'good', 'inaccuracy', 'mistake', 'blunder'];
+const TIP_COUNT = 4;
 
 const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, playerColor }) => {
   const { t } = useTranslation();
   const { analyzeGameAsync } = useChessAIWorker();
   const [summary, setSummary] = useState<GameReviewSummary | null>(null);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [tipIndex, setTipIndex] = useState(0);
+  const [selected, setSelected] = useState<ReviewedMove | null>(null);
+  const [showBest, setShowBest] = useState(false);
+
+  // Position before each ply, so a reviewed move can be replayed visually.
+  const boards = useMemo(() => {
+    const game = new Chess();
+    const result = [game.board()];
+    for (const m of moveHistory) {
+      game.move({ from: m.from, to: m.to, promotion: m.promotion });
+      result.push(game.board());
+    }
+    return result;
+  }, [moveHistory]);
 
   useEffect(() => {
     if (!open) return;
     let cancelled = false;
     setLoading(true);
     setSummary(null);
+    setProgress(null);
+    setSelected(null);
+    setShowBest(false);
     // Small defer so the UI can paint the loader before analysis starts —
     // matters most if the Worker is unavailable and analysis falls back to
     // running on the main thread.
     const timer = setTimeout(() => {
-      analyzeGameAsync(moveHistory, playerColor, 2).then(s => {
+      analyzeGameAsync(moveHistory, playerColor, 2, (done, total) => {
+        if (!cancelled) setProgress({ done, total });
+      }).then(s => {
         if (cancelled) return;
         setSummary(s);
         setLoading(false);
@@ -43,7 +66,24 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
     return () => { cancelled = true; clearTimeout(timer); };
   }, [open, moveHistory, playerColor, analyzeGameAsync]);
 
+  // Rotate tips while the analysis runs so the wait feels shorter.
+  useEffect(() => {
+    if (!loading) return;
+    const interval = setInterval(() => setTipIndex(i => (i + 1) % TIP_COUNT), 4000);
+    return () => clearInterval(interval);
+  }, [loading]);
+
   if (!open) return null;
+
+  const percent = progress && progress.total > 0
+    ? Math.round((progress.done / progress.total) * 100)
+    : 0;
+
+  const highlighted = selected
+    ? showBest && selected.bestMove
+      ? { from: selected.bestMove.from, to: selected.bestMove.to }
+      : { from: selected.from, to: selected.to }
+    : null;
 
   return (
     <AnimatePresence>
@@ -71,9 +111,41 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
 
           <div className="flex-1 overflow-y-auto p-5">
             {loading && (
-              <div className="flex flex-col items-center justify-center py-12">
-                <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-3" />
-                <p className="text-sm font-body text-muted-foreground">{t('gameReview.analyzing')}</p>
+              <div className="flex flex-col items-center justify-center py-12 px-4">
+                <p className="text-sm font-body text-foreground mb-3">
+                  {progress
+                    ? t('gameReview.progress', { current: progress.done, total: progress.total })
+                    : t('gameReview.preparing')}
+                </p>
+                <div
+                  className="w-full max-w-sm h-3 rounded-full bg-secondary overflow-hidden border border-border"
+                  role="progressbar"
+                  aria-valuenow={percent}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
+                  <motion.div
+                    className="h-full bg-accent rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percent}%` }}
+                    transition={{ duration: 0.25 }}
+                  />
+                </div>
+                <p className="mt-2 text-2xl font-display font-bold text-accent" translate="no">
+                  {percent}%
+                </p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={tipIndex}
+                    className="mt-6 text-xs font-body text-muted-foreground text-center max-w-xs italic"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    💡 {t(`gameReview.tip${tipIndex + 1}`)}
+                  </motion.p>
+                </AnimatePresence>
               </div>
             )}
 
@@ -99,12 +171,50 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                   </div>
                 </div>
 
+                <p className="mb-3 text-xs font-body text-muted-foreground text-center">
+                  {t('gameReview.tapToView')}
+                </p>
+
+                {/* Position preview for the selected move */}
+                {selected && (
+                  <div className="mb-4 flex flex-col items-center gap-2 p-3 rounded-lg border border-border bg-secondary/40">
+                    <p className="text-xs font-body text-muted-foreground">
+                      {t('gameReview.positionBefore', { number: selected.index })}
+                      {' — '}
+                      <span className="font-mono" translate="no">{selected.from} → {selected.to}</span>
+                    </p>
+                    <ChessBoard
+                      board={boards[selected.ply]}
+                      selectedSquare={null}
+                      validMoves={[]}
+                      isInCheck={false}
+                      currentTurn={selected.color}
+                      playerColor={playerColor}
+                      hint={highlighted}
+                      onSquareClick={() => {}}
+                    />
+                    {selected.bestMove && selected.quality !== 'best' && (
+                      <button
+                        onClick={() => setShowBest(v => !v)}
+                        className="mt-1 px-3 py-1.5 rounded border border-border text-xs font-body text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {showBest ? t('gameReview.viewPlayed') : t('gameReview.viewBest')}
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 {/* Move list */}
                 <div className="space-y-1.5">
                   {summary.moves.map(m => (
-                    <div
+                    <button
                       key={m.ply}
-                      className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-card hover:bg-secondary/50 transition-colors"
+                      onClick={() => { setSelected(m); setShowBest(false); }}
+                      className={`w-full text-left flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${
+                        selected?.ply === m.ply
+                          ? 'border-accent bg-accent/10'
+                          : 'border-border bg-card hover:bg-secondary/50'
+                      }`}
                     >
                       <span className="text-xs font-mono text-muted-foreground w-8">#{m.index}</span>
                       <span className={`text-lg font-display font-bold w-8 text-center ${qualityColor(m.quality)}`}>
@@ -136,7 +246,7 @@ const GameReview: React.FC<GameReviewProps> = ({ open, onClose, moveHistory, pla
                           </p>
                         </div>
                       )}
-                    </div>
+                    </button>
                   ))}
 
                   {summary.moves.length === 0 && (
