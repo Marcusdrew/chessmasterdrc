@@ -101,7 +101,7 @@ const ChessSquare: React.FC<ChessSquareProps> = ({
       {symbol && (
         <motion.span
           className={`text-3xl md:text-4xl leading-none ${
-            piece?.color === 'w' ? 'text-chess-white-piece' : 'text-chess-black-piece'
+            piece?.color === 'w' ? 'chess-piece-w' : 'chess-piece-b'
           } ${isSelected ? 'scale-110' : ''} ${isFrozen ? 'opacity-50' : ''}`}
           layout
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}

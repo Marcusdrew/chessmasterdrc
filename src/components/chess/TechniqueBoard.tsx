@@ -58,7 +58,7 @@ const TechniqueBoard: React.FC<TechniqueBoardProps> = ({ steps }) => {
                     className={`w-8 h-8 flex items-center justify-center text-lg ${isLight ? 'bg-chess-light' : 'bg-chess-dark'}`}
                   >
                     {symbol && (
-                      <span className={piece?.color === 'w' ? 'text-chess-white-piece' : 'text-chess-black-piece'}>
+                      <span className={piece?.color === 'w' ? 'chess-piece-w' : 'chess-piece-b'}>
                         {symbol}
                       </span>
                     )}

@@ -51,7 +51,7 @@
     --chess-selected: 45 80% 60%;
     --chess-valid: 145 50% 45%;
     --chess-check: 0 72% 51%;
-    --chess-white-piece: 30 10% 15%;
+    --chess-white-piece: 38 35% 94%;
     --chess-black-piece: 20 10% 12%;
 
     /* Revolutionary-mode tokens: energy (electric blue), power (violet),
@@ -112,5 +112,18 @@
 @layer utilities {
   .chess-board-shadow {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Pièces blanches : remplissage clair + contour foncé pour les
+     distinguer nettement des pièces noires, sur cases claires comme foncées. */
+  .chess-piece-w {
+    color: hsl(var(--chess-white-piece));
+    -webkit-text-stroke: 1.5px hsl(var(--chess-black-piece));
+    text-shadow: 0 0 1px hsl(var(--chess-black-piece));
+    paint-order: stroke fill;
+  }
+
+  .chess-piece-b {
+    color: hsl(var(--chess-black-piece));
   }
 }
