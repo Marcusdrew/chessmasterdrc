@@ -1,4 +1,4 @@
 # Corrections en cours
-- [ ] Rendre le dernier déplacement visible et animé sur l’échiquier.
-- [ ] Stabiliser les résultats d’analyse et leur réouverture.
-- [ ] Vérifier une partie terminée et les tests de régression.
+- [x] Rendre le dernier déplacement visible et animé sur l’échiquier.
+- [x] Stabiliser les résultats d’analyse et leur réouverture.
+- [x] Vérifier une partie terminée et les tests de régression.
